@@ -185,8 +185,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.1 Authentication — Login Screen (`/`)
 
-**Screenshot:** [`docs/screenshots/01-login.png`](screenshots/01-login.png)
-**HTML Mockup:** [`docs/mockups/01-login.html`](mockups/01-login.html)
+**Screenshot:** [`screenshots/01-login.png`](screenshots/01-login.png)
+**HTML Mockup:** [`mockups/01-login.html`](mockups/01-login.html)
 
 ```
 +---------------------------------------------------+
@@ -233,8 +233,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.2 Authentication — OTP Verification
 
-**Screenshot:** [`docs/screenshots/02-otp-verify.png`](screenshots/02-otp-verify.png)
-**HTML Mockup:** [`docs/mockups/02-otp-verify.html`](mockups/02-otp-verify.html)
+**Screenshot:** [`screenshots/02-otp-verify.png`](screenshots/02-otp-verify.png)
+**HTML Mockup:** [`mockups/02-otp-verify.html`](mockups/02-otp-verify.html)
 
 ```
 +---------------------------------------------------+
@@ -271,8 +271,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.3 Admin Dashboard (`/admin/dashboard`)
 
-**Screenshot:** [`docs/screenshots/03-admin-dashboard.png`](screenshots/03-admin-dashboard.png)
-**HTML Mockup:** [`docs/mockups/03-admin-dashboard.html`](mockups/03-admin-dashboard.html)
+**Screenshot:** [`screenshots/03-admin-dashboard.png`](screenshots/03-admin-dashboard.png)
+**HTML Mockup:** [`mockups/03-admin-dashboard.html`](mockups/03-admin-dashboard.html)
 
 ```
 +----------------------------------------------------------------------+
@@ -323,8 +323,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.4 Training Management (`/admin/trainings`)
 
-**Screenshot (List):** [`docs/screenshots/04-admin-trainings.png`](screenshots/04-admin-trainings.png)
-**Screenshot (Add Modal):** [`docs/screenshots/05-admin-add-training.png`](screenshots/05-admin-add-training.png)
+**Screenshot (List):** [`screenshots/04-admin-trainings.png`](screenshots/04-admin-trainings.png)
+**Screenshot (Add Modal):** [`screenshots/05-admin-add-training.png`](screenshots/05-admin-add-training.png)
 **HTML Mockups:** [`04-admin-trainings.html`](mockups/04-admin-trainings.html), [`05-admin-add-training.html`](mockups/05-admin-add-training.html)
 
 **UX Design Rationale:**
@@ -352,8 +352,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.5 Batch Allocation (`/admin/batches/:id`) — Core Admin Workflow
 
-**Screenshot (Table):** [`docs/screenshots/06-admin-batch-allocation.png`](screenshots/06-admin-batch-allocation.png)
-**Screenshot (Confirm Dialog):** [`docs/screenshots/07-admin-batch-confirm-dialog.png`](screenshots/07-admin-batch-confirm-dialog.png)
+**Screenshot (Table):** [`screenshots/06-admin-batch-allocation.png`](screenshots/06-admin-batch-allocation.png)
+**Screenshot (Confirm Dialog):** [`screenshots/07-admin-batch-confirm-dialog.png`](screenshots/07-admin-batch-confirm-dialog.png)
 **HTML Mockups:** [`06-admin-batch-allocation.html`](mockups/06-admin-batch-allocation.html), [`07-admin-batch-confirm-dialog.html`](mockups/07-admin-batch-confirm-dialog.html)
 
 ```
@@ -409,8 +409,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.6 Attendance Management (`/admin/trainings/:id` -> Attendance Tab)
 
-**Screenshot:** [`docs/screenshots/08-admin-attendance.png`](screenshots/08-admin-attendance.png)
-**HTML Mockup:** [`docs/mockups/08-admin-attendance.html`](mockups/08-admin-attendance.html)
+**Screenshot:** [`screenshots/08-admin-attendance.png`](screenshots/08-admin-attendance.png)
+**HTML Mockup:** [`mockups/08-admin-attendance.html`](mockups/08-admin-attendance.html)
 
 ```
 +--------------------------------------------------------------------+
@@ -453,8 +453,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.7 User Management (`/admin/users`)
 
-**Screenshot:** [`docs/screenshots/09-admin-users.png`](screenshots/09-admin-users.png)
-**HTML Mockup:** [`docs/mockups/09-admin-users.html`](mockups/09-admin-users.html)
+**Screenshot:** [`screenshots/09-admin-users.png`](screenshots/09-admin-users.png)
+**HTML Mockup:** [`mockups/09-admin-users.html`](mockups/09-admin-users.html)
 
 **UX Design Rationale:**
 - **Avatar initials** next to each name provide visual anchoring and make the table feel more personal than a plain text list.
@@ -474,8 +474,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.8 User Portal — Browse Trainings (`/user/trainings`)
 
-**Screenshot:** [`docs/screenshots/10-user-browse-trainings.png`](screenshots/10-user-browse-trainings.png)
-**HTML Mockup:** [`docs/mockups/10-user-browse-trainings.html`](mockups/10-user-browse-trainings.html)
+**Screenshot:** [`screenshots/10-user-browse-trainings.png`](screenshots/10-user-browse-trainings.png)
+**HTML Mockup:** [`mockups/10-user-browse-trainings.html`](mockups/10-user-browse-trainings.html)
 
 ```
 +--------------------------------------------------------------+
@@ -522,8 +522,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.9 Enrollment Flow (`/user/trainings/:id`)
 
-**Screenshot (Form):** [`docs/screenshots/11-user-enrollment.png`](screenshots/11-user-enrollment.png)
-**Screenshot (Success):** [`docs/screenshots/12-user-enrollment-success.png`](screenshots/12-user-enrollment-success.png)
+**Screenshot (Form):** [`screenshots/11-user-enrollment.png`](screenshots/11-user-enrollment.png)
+**Screenshot (Success):** [`screenshots/12-user-enrollment-success.png`](screenshots/12-user-enrollment-success.png)
 **HTML Mockups:** [`11-user-enrollment.html`](mockups/11-user-enrollment.html), [`12-user-enrollment-success.html`](mockups/12-user-enrollment-success.html)
 
 **UX Design Rationale:**
@@ -538,8 +538,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.10 User Dashboard (`/user/dashboard`)
 
-**Screenshot:** [`docs/screenshots/13-user-dashboard.png`](screenshots/13-user-dashboard.png)
-**HTML Mockup:** [`docs/mockups/13-user-dashboard.html`](mockups/13-user-dashboard.html)
+**Screenshot:** [`screenshots/13-user-dashboard.png`](screenshots/13-user-dashboard.png)
+**HTML Mockup:** [`mockups/13-user-dashboard.html`](mockups/13-user-dashboard.html)
 
 **UX Design Rationale:**
 - **Personal welcome.** "Welcome back, Priya!" with subtitle "Here's your learning progress" — warm, personal, encouraging.
@@ -552,8 +552,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.11 Email Response Page (`/respond/:token`)
 
-**Screenshot (Choice):** [`docs/screenshots/14-email-response.png`](screenshots/14-email-response.png)
-**Screenshot (Confirmation):** [`docs/screenshots/15-email-response-confirm.png`](screenshots/15-email-response-confirm.png)
+**Screenshot (Choice):** [`screenshots/14-email-response.png`](screenshots/14-email-response.png)
+**Screenshot (Confirmation):** [`screenshots/15-email-response-confirm.png`](screenshots/15-email-response-confirm.png)
 **HTML Mockups:** [`14-email-response.html`](mockups/14-email-response.html), [`15-email-response-confirm.html`](mockups/15-email-response-confirm.html)
 
 **UX Design Rationale:**
@@ -568,8 +568,8 @@ Each screen includes a wireframe for structural reference and a link to its high
 
 ### 4.12 Notification Log (`/admin/notifications`)
 
-**Screenshot:** [`docs/screenshots/16-admin-notifications.png`](screenshots/16-admin-notifications.png)
-**HTML Mockup:** [`docs/mockups/16-admin-notifications.html`](mockups/16-admin-notifications.html)
+**Screenshot:** [`screenshots/16-admin-notifications.png`](screenshots/16-admin-notifications.png)
+**HTML Mockup:** [`mockups/16-admin-notifications.html`](mockups/16-admin-notifications.html)
 
 **UX Design Rationale:**
 - **Comprehensive filter row** — four filters (Type, Status, Date Range, Search) allow admins to quickly find specific notifications. This is important for auditing and troubleshooting email delivery issues.
