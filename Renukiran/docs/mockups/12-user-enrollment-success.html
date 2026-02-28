@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>Enrollment Submitted - RWF Learning Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F8F9FB;
+      color: #18181B;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Top Navigation ── */
+    .topnav {
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topnav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+    }
+    .logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+    .logo-brand {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .logo-brand .renu {
+      color: #7CB518;
+    }
+    .logo-sub {
+      font-size: 11px;
+      color: #2B5EA7;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: #52525B;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .nav-links a:hover {
+      background: #F4F4F5;
+      color: #18181B;
+    }
+    .nav-links a.active {
+      background: #EBF0F9;
+      color: #2B5EA7;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .lang-selector {
+      font-size: 14px;
+      color: #52525B;
+      background: #F4F4F5;
+      border: 1px solid #E4E4E7;
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #2B5EA7;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Content Area ── */
+    .content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 56px 32px 64px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── Success Card ── */
+    .success-card {
+      background: #fff;
+      border: 1px solid #E4E4E7;
+      border-radius: 20px;
+      padding: 48px 44px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    }
+
+    /* ── Checkmark Circle ── */
+    .checkmark-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #DCFCE7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .checkmark-circle svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .success-heading {
+      font-size: 24px;
+      font-weight: 700;
+      color: #16A34A;
+      margin-bottom: 28px;
+    }
+
+    /* ── Details ── */
+    .details-list {
+      text-align: left;
+      margin-bottom: 32px;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px solid #F4F4F5;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    .detail-label {
+      font-size: 14px;
+      color: #71717A;
+      font-weight: 500;
+    }
+    .detail-value {
+      font-size: 15px;
+      color: #18181B;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* ── What Happens Next ── */
+    .next-section {
+      text-align: left;
+      background: #FAFAFA;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .next-heading {
+      font-size: 16px;
+      font-weight: 700;
+      color: #18181B;
+      margin-bottom: 18px;
+    }
+    .next-steps {
+      list-style: none;
+      padding: 0;
+    }
+    .next-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: #52525B;
+      line-height: 1.5;
+    }
+    .next-steps li:last-child {
+      margin-bottom: 0;
+    }
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #EBF0F9;
+      color: #2B5EA7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      height: 50px;
+      background: #2B5EA7;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.2px;
+      transition: background 0.15s;
+      margin-bottom: 14px;
+    }
+    .btn-primary:hover {
+      background: #1E4A8A;
+    }
+    .link-secondary {
+      display: inline-block;
+      font-size: 15px;
+      font-weight: 500;
+      color: #2B5EA7;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .link-secondary:hover {
+      color: #1E4A8A;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <div class="logo">
+        <span class="logo-brand"><span class="renu">Renukiran</span></span>
+        <span class="logo-sub">Learning Portal</span>
+      </div>
+      <div class="nav-links">
+        <a href="#">Trainings</a>
+        <a href="#" class="active">My Courses</a>
+        <a href="#">Profile</a>
+      </div>
+      <div class="nav-right">
+        <select class="lang-selector">
+          <option>हिन्दी ▾</option>
+          <option>English</option>
+        </select>
+        <div class="avatar">PS</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="content">
+    <div class="success-card">
+
+      <!-- Green Checkmark -->
+      <div class="checkmark-circle">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M12 20.5L17.5 26L28 15" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h1 class="success-heading">Enrollment Submitted!</h1>
+
+      <!-- Enrollment Details -->
+      <div class="details-list">
+        <div class="detail-row">
+          <span class="detail-label">Training</span>
+          <span class="detail-value">Stitching &ndash; Basic</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Preferred Slot</span>
+          <span class="detail-value">Evening (4:00 &ndash; 6:00 PM)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Backup Slot</span>
+          <span class="detail-value">Morning (9:00 &ndash; 11:00 AM)</span>
+        </div>
+      </div>
+
+      <!-- What Happens Next -->
+      <div class="next-section">
+        <h2 class="next-heading">What happens next?</h2>
+        <ol class="next-steps">
+          <li>
+            <span class="step-number">1</span>
+            <span>Admin reviews your enrollment</span>
+          </li>
+          <li>
+            <span class="step-number">2</span>
+            <span>You'll receive SMS confirmation</span>
+          </li>
+          <li>
+            <span class="step-number">3</span>
+            <span>Training starts March 15, 2026</span>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Actions -->
+      <button class="btn-primary">View My Enrollments</button>
+      <a href="#" class="link-secondary">Browse More Trainings</a>
+
+    </div>
+  </main>
+
+</body>
+</html>

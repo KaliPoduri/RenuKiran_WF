@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>RWF Learning Portal - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #18181B;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #F0F4FA 0%, #FFFFFF 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Language selector */
+    .lang-selector {
+      position: fixed;
+      top: 24px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: #FFFFFF;
+      border: 1px solid #E4E4E7;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #52525B;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      transition: border-color 0.15s;
+    }
+    .lang-selector:hover {
+      border-color: #D4D4D8;
+    }
+    .lang-selector .globe {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+    }
+
+    /* Card */
+    .login-card {
+      width: 420px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #E4E4E7;
+      padding: 40px 36px 32px;
+      text-align: center;
+    }
+
+    /* Logo area */
+    .logo-area {
+      margin-bottom: 8px;
+    }
+    .logo-figures {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .logo-text {
+      margin-bottom: 4px;
+    }
+    .logo-text .name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #7CB518;
+      letter-spacing: 0.5px;
+    }
+    .logo-text .subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: #2B5EA7;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+
+    /* Portal title */
+    .portal-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #52525B;
+      margin-top: 20px;
+      margin-bottom: 32px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Input group */
+    .input-group {
+      margin-bottom: 24px;
+    }
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #3F3F46;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+    .phone-input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .country-code {
+      width: 72px;
+      flex-shrink: 0;
+      padding: 12px 10px;
+      border: 1px solid #D4D4D8;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: #3F3F46;
+      background: #FAFAFA;
+      text-align: center;
+      outline: none;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .phone-number-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #D4D4D8;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      color: #18181B;
+      outline: none;
+      min-height: 48px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .phone-number-input::placeholder {
+      color: #A1A1AA;
+      font-weight: 400;
+    }
+    .phone-number-input:focus {
+      border-color: #2B5EA7;
+      box-shadow: 0 0 0 3px rgba(43,94,167,0.1);
+    }
+
+    /* OTP Button */
+    .btn-send-otp {
+      width: 100%;
+      padding: 14px 28px;
+      background: #2B5EA7;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      min-height: 50px;
+      transition: background 0.15s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+    .btn-send-otp:hover {
+      background: #1E4A8A;
+    }
+    .btn-send-otp:active {
+      transform: scale(0.99);
+    }
+
+    /* Footer text */
+    .card-footer {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid #F4F4F5;
+    }
+    .card-footer p {
+      font-size: 13px;
+      color: #71717A;
+    }
+    .card-footer a {
+      color: #2B5EA7;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Powered by */
+    .powered-by {
+      margin-top: 32px;
+      font-size: 12px;
+      color: #A1A1AA;
+      letter-spacing: 0.3px;
+    }
+    .powered-by span {
+      color: #71717A;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Language Selector -->
+  <div class="lang-selector">
+    <svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+    English &#9662;
+  </div>
+
+  <!-- Login Card -->
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="logo-area">
+      <div class="logo-figures">
+        <svg width="64" height="48" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Left figure -->
+          <circle cx="16" cy="10" r="5.5" fill="#2B5EA7"/>
+          <path d="M8 44 C8 28 10 22 16 22 C22 22 24 28 24 44" stroke="#2B5EA7" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <!-- Center figure (taller) -->
+          <circle cx="32" cy="7" r="6" fill="#2B5EA7"/>
+          <path d="M23.5 44 C23.5 26 26 19 32 19 C38 19 40.5 26 40.5 44" stroke="#2B5EA7" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <!-- Right figure -->
+          <circle cx="48" cy="10" r="5.5" fill="#2B5EA7"/>
+          <path d="M40 44 C40 28 42 22 48 22 C54 22 56 28 56 44" stroke="#2B5EA7" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="name">Renukiran</div>
+        <div class="subtitle">Welfare Foundation</div>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="portal-title">Learning Portal</div>
+
+    <!-- Phone Input -->
+    <div class="input-group">
+      <label class="input-label">Mobile Number</label>
+      <div class="phone-input-row">
+        <div class="country-code">+91</div>
+        <input type="tel" class="phone-number-input" placeholder="98765 43210" maxlength="12">
+      </div>
+    </div>
+
+    <!-- Send OTP Button -->
+    <button class="btn-send-otp">Send OTP</button>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <p>New here? <a href="#">Contact your training center</a></p>
+    </div>
+  </div>
+
+  <!-- Powered by -->
+  <div class="powered-by">Powered by <span>RWF</span></div>
+
+</body>
+</html>

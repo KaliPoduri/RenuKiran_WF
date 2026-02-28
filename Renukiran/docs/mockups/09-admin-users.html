@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440, initial-scale=1.0">
+  <title>RWF LMS - User Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #18181B;
+      background: #F8F9FB;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px;
+      min-height: 100vh;
+      background: #FFFFFF;
+      border-right: 1px solid #E4E4E7;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid #E4E4E7;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sidebar-logo .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #7CB518, #2B5EA7);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .sidebar-logo .logo-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #18181B;
+    }
+    .sidebar-logo .logo-text span {
+      color: #7CB518;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #A1A1AA;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 16px 12px 8px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #52525B;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .nav-item:hover {
+      background: #F4F4F5;
+      color: #18181B;
+    }
+    .nav-item.active {
+      background: #EBF0F9;
+      color: #2B5EA7;
+      font-weight: 600;
+    }
+    .nav-item .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid #E4E4E7;
+    }
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .sidebar-user .avatar {
+      width: 32px;
+      height: 32px;
+      background: #EBF0F9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2B5EA7;
+    }
+    .sidebar-user .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .sidebar-user .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #18181B;
+    }
+    .sidebar-user .user-role {
+      font-size: 12px;
+      color: #71717A;
+    }
+
+    /* ── Main Content ── */
+    .main {
+      flex: 1;
+      margin-left: 260px;
+      min-height: 100vh;
+    }
+
+    /* Top Bar */
+    .topbar {
+      height: 64px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #E4E4E7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #71717A;
+    }
+    .topbar-breadcrumb .current {
+      color: #18181B;
+      font-weight: 500;
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-actions .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid #E4E4E7;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #52525B;
+      transition: all 0.15s;
+    }
+    .topbar-actions .icon-btn:hover {
+      background: #F4F4F5;
+    }
+    .notification-dot {
+      position: relative;
+    }
+    .notification-dot::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      background: #DC2626;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    /* Page Content */
+    .page-content {
+      padding: 32px;
+    }
+
+    /* Page Header */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #18181B;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+      height: 40px;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: #2B5EA7;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #1E4A8A;
+    }
+    .btn-outline {
+      background: #FFFFFF;
+      border: 1px solid #D4D4D8;
+      color: #3F3F46;
+    }
+    .btn-outline:hover {
+      background: #F4F4F5;
+    }
+    .btn-danger-outline {
+      background: #FFFFFF;
+      border: 1px solid #FCA5A5;
+      color: #DC2626;
+    }
+    .btn-danger-outline:hover {
+      background: #FEE2E2;
+    }
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 13px;
+      height: 34px;
+    }
+
+    /* Filters Row */
+    .filters-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .search-input-wrap {
+      position: relative;
+      flex: 1;
+      max-width: 360px;
+    }
+    .search-input-wrap .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #A1A1AA;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 14px 0 40px;
+      border: 1px solid #E4E4E7;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: #18181B;
+      background: #FFFFFF;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input::placeholder {
+      color: #A1A1AA;
+    }
+    .search-input:focus {
+      border-color: #2B5EA7;
+      box-shadow: 0 0 0 3px rgba(43,94,167,0.1);
+    }
+
+    .filter-select {
+      height: 40px;
+      padding: 0 32px 0 14px;
+      border: 1px solid #E4E4E7;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      color: #18181B;
+      background: #FFFFFF;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%2371717A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      cursor: pointer;
+      outline: none;
+    }
+    .filter-select:focus {
+      border-color: #2B5EA7;
+      box-shadow: 0 0 0 3px rgba(43,94,167,0.1);
+    }
+
+    /* Table */
+    .table-card {
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid #E4E4E7;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #71717A;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #FAFAFA;
+      border-bottom: 1px solid #E4E4E7;
+    }
+    td {
+      padding: 12px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid #F4F4F5;
+      vertical-align: middle;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tbody tr {
+      transition: background 0.1s;
+    }
+    tbody tr:hover {
+      background: #FAFAFA;
+    }
+
+    /* Checkbox */
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkbox-wrap input[type="checkbox"] {
+      display: none;
+    }
+    .checkbox-custom {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #D4D4D8;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      background: white;
+    }
+    .checkbox-custom:hover {
+      border-color: #2B5EA7;
+    }
+    .checkbox-wrap input:checked + .checkbox-custom {
+      background: #2B5EA7;
+      border-color: #2B5EA7;
+    }
+    .checkbox-wrap input:checked + .checkbox-custom::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 5l2.5 2.5L8 3' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    /* Name Cell */
+    .name-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .name-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .name-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .name-text {
+      font-weight: 500;
+      color: #18181B;
+      font-size: 14px;
+    }
+
+    /* Phone */
+    .phone-text {
+      font-size: 14px;
+      color: #52525B;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Role Badge */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .role-badge.admin {
+      background: #EBF0F9;
+      color: #2B5EA7;
+    }
+    .role-badge.user {
+      background: #F4F4F5;
+      color: #52525B;
+    }
+
+    /* Training text */
+    .training-text {
+      font-size: 13px;
+      color: #52525B;
+    }
+    .training-none {
+      color: #D4D4D8;
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .status-badge .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .status-badge.active {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+    .status-badge.active .status-dot {
+      background: #16A34A;
+    }
+    .status-badge.waitlisted {
+      background: #FEF3C7;
+      color: #A16207;
+    }
+    .status-badge.waitlisted .status-dot {
+      background: #EAB308;
+    }
+    .status-badge.inactive {
+      background: #F4F4F5;
+      color: #71717A;
+    }
+    .status-badge.inactive .status-dot {
+      background: #A1A1AA;
+    }
+
+    /* Actions cell */
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #71717A;
+      transition: all 0.15s;
+    }
+    .action-btn:hover {
+      background: #F4F4F5;
+      color: #18181B;
+    }
+    .action-btn.danger:hover {
+      background: #FEE2E2;
+      color: #DC2626;
+    }
+
+    /* Table Footer */
+    .table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-top: 1px solid #E4E4E7;
+      background: #FAFAFA;
+    }
+    .table-footer-info {
+      font-size: 13px;
+      color: #71717A;
+    }
+    .table-footer-info strong {
+      color: #18181B;
+      font-weight: 600;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .page-btn {
+      min-width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      color: #52525B;
+      transition: all 0.15s;
+      padding: 0 6px;
+    }
+    .page-btn:hover {
+      background: #F4F4F5;
+    }
+    .page-btn.active {
+      background: #2B5EA7;
+      color: white;
+      border-color: #2B5EA7;
+    }
+    .page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .page-btn.nav-btn {
+      border: 1px solid #E4E4E7;
+      background: white;
+    }
+    .page-btn.nav-btn:hover:not(:disabled) {
+      background: #F4F4F5;
+    }
+
+    /* Bulk Actions */
+    .bulk-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .bulk-label {
+      font-size: 13px;
+      color: #71717A;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">R</div>
+    <div class="logo-text"><span>Renu</span>kiran</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      </span>
+      Dashboard
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      </span>
+      Trainings
+    </a>
+    <a class="nav-item active" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </span>
+      Users
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </span>
+      Schedule
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </span>
+      Notifications
+    </a>
+
+    <div class="nav-section-label">Reports</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </span>
+      Analytics
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </span>
+      Settings
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name">Admin Kumar</div>
+        <div class="user-role">Administrator</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="current">Users</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn notification-dot" title="Notifications">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </button>
+      <button class="icon-btn" title="Help">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Users</h1>
+      <button class="btn btn-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add User
+      </button>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="filters-row">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="text" placeholder="Search users by name or phone...">
+      </div>
+      <select class="filter-select">
+        <option selected>All Roles</option>
+        <option>Admin</option>
+        <option>User</option>
+      </select>
+      <select class="filter-select">
+        <option selected>All Statuses</option>
+        <option>Active</option>
+        <option>Inactive</option>
+        <option>Waitlisted</option>
+      </select>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 44px; text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Training</th>
+            <th>Status</th>
+            <th style="width: 80px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Row 1: Priya Sharma -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #DCFCE7; color: #16A34A;">PS</div>
+                <span class="name-text">Priya Sharma</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-43210</span></td>
+            <td><span class="role-badge user">User</span></td>
+            <td><span class="training-text">Stitching Basic</span></td>
+            <td>
+              <span class="status-badge active">
+                <span class="status-dot"></span>
+                Active
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 2: Admin Kumar -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #EBF0F9; color: #2B5EA7;">AK</div>
+                <span class="name-text">Admin Kumar</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-00000</span></td>
+            <td><span class="role-badge admin">Admin</span></td>
+            <td><span class="training-text training-none">&mdash;</span></td>
+            <td>
+              <span class="status-badge active">
+                <span class="status-dot"></span>
+                Active
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 3: Kavita Reddy -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #FEE2E2; color: #DC2626;">KR</div>
+                <span class="name-text">Kavita Reddy</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-43211</span></td>
+            <td><span class="role-badge user">User</span></td>
+            <td><span class="training-text">Stitching Basic</span></td>
+            <td>
+              <span class="status-badge active">
+                <span class="status-dot"></span>
+                Active
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 4: Radha Patel -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #FEF9C3; color: #A16207;">RP</div>
+                <span class="name-text">Radha Patel</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-43215</span></td>
+            <td><span class="role-badge user">User</span></td>
+            <td><span class="training-text">Stitching Basic</span></td>
+            <td>
+              <span class="status-badge waitlisted">
+                <span class="status-dot"></span>
+                Waitlisted
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 5: Meena Devi -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #F0F8E4; color: #5E8A12;">MD</div>
+                <span class="name-text">Meena Devi</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-43217</span></td>
+            <td><span class="role-badge user">User</span></td>
+            <td><span class="training-text">Computer Fund.</span></td>
+            <td>
+              <span class="status-badge active">
+                <span class="status-dot"></span>
+                Active
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 6: Sunita Mishra -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #EBF0F9; color: #2B5EA7;">SM</div>
+                <span class="name-text">Sunita Mishra</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-43212</span></td>
+            <td><span class="role-badge user">User</span></td>
+            <td><span class="training-text">Beauty & Wellness</span></td>
+            <td>
+              <span class="status-badge active">
+                <span class="status-dot"></span>
+                Active
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 7: Coordinator Priya -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #EBF0F9; color: #2B5EA7;">CP</div>
+                <span class="name-text">Coordinator Priya</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-00001</span></td>
+            <td><span class="role-badge admin">Admin</span></td>
+            <td><span class="training-text training-none">&mdash;</span></td>
+            <td>
+              <span class="status-badge active">
+                <span class="status-dot"></span>
+                Active
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Row 8: Deepa Gupta -->
+          <tr>
+            <td style="text-align: center;">
+              <label class="checkbox-wrap">
+                <input type="checkbox">
+                <span class="checkbox-custom"></span>
+              </label>
+            </td>
+            <td>
+              <div class="name-cell">
+                <div class="name-avatar" style="background: #F4F4F5; color: #71717A;">DG</div>
+                <span class="name-text">Deepa Gupta</span>
+              </div>
+            </td>
+            <td><span class="phone-text">98765-43216</span></td>
+            <td><span class="role-badge user">User</span></td>
+            <td><span class="training-text">Computer Fund.</span></td>
+            <td>
+              <span class="status-badge inactive">
+                <span class="status-dot"></span>
+                Inactive
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="action-btn" title="Edit user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn danger" title="Delete user">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Table Footer / Pagination -->
+      <div class="table-footer">
+        <span class="table-footer-info">Showing <strong>1&ndash;8</strong> of <strong>142</strong> users</span>
+        <div class="pagination">
+          <button class="page-btn nav-btn" disabled title="Previous">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn" style="cursor: default; pointer-events: none;">...</button>
+          <button class="page-btn">18</button>
+          <button class="page-btn nav-btn" title="Next">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-actions">
+      <span class="bulk-label">Bulk actions:</span>
+      <button class="btn btn-sm btn-danger-outline">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        Delete
+      </button>
+      <button class="btn btn-sm btn-outline">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

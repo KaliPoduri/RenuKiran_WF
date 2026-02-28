@@ -1,7 +1,7 @@
 # RWF Learning Management System — UI/UX Design Document
 
-**Version:** 1.0
-**Date:** 2026-02-28
+**Version:** 2.0
+**Date:** 2026-03-01
 **Scope:** MVP1 — Enrollment & Batch Allocation
 **Author:** UI/UX Design Phase
 
@@ -17,7 +17,11 @@
 6. [Responsive Design](#6-responsive-design)
 7. [Accessibility (WCAG 2.1 AA)](#7-accessibility-wcag-21-aa)
 8. [Internationalization (i18n)](#8-internationalization-i18n)
-9. [Tech Stack Recommendation](#9-tech-stack-recommendation)
+9. [Appendix: Email Templates](#appendix-email-templates)
+
+### Screenshot Artifacts
+
+All high-fidelity mockup screenshots are located in `docs/screenshots/`. Interactive HTML mockups are in `docs/mockups/` and can be opened in any browser for inspection.
 
 ---
 
@@ -90,40 +94,43 @@ RWF Learning Management System
 
 ### 3.1 Color Palette
 
-Semantic color system. Values are brand-derived placeholders — finalize when logo is provided.
+Semantic color system derived from the Renukiran Welfare Foundation logo. The logo features deep blue human figures symbolizing community and trust, with a bright green swoosh and wordmark representing growth and empowerment.
 
 | Token | Role | Value | Usage |
 |-------|------|-------|-------|
-| `--primary` | Brand primary | `#E8762B` (warm orange/saffron) | CTAs, active nav, key actions |
-| `--primary-light` | Primary tint | `#FFF3EB` | Hover states, selected rows, badges |
-| `--primary-dark` | Primary shade | `#C45E1A` | Pressed states, focus rings |
-| `--secondary` | Supporting | `#1A6B5E` (deep teal) | Secondary buttons, info badges |
-| `--secondary-light` | Secondary tint | `#E8F5F2` | Secondary backgrounds |
+| `--brand-blue` | Brand primary | `#2B5EA7` (deep blue) | CTAs, active nav, key actions, primary buttons |
+| `--brand-blue-dark` | Primary shade | `#1E4A8A` | Pressed/hover states, focus rings |
+| `--brand-blue-light` | Primary tint | `#EBF0F9` | Selected rows, active backgrounds, highlights |
+| `--brand-blue-50` | Lightest blue | `#F0F4FA` | Page backgrounds, subtle accents |
+| `--brand-green` | Brand accent | `#7CB518` (bright green) | Accent buttons, enroll CTAs, positive accents |
+| `--brand-green-dark` | Accent shade | `#5E8A12` | Pressed states for accent elements |
+| `--brand-green-light` | Accent tint | `#F0F8E4` | Success-adjacent backgrounds |
 | `--neutral-50` | Lightest gray | `#FAFAFA` | Page backgrounds |
 | `--neutral-100` | Light gray | `#F4F4F5` | Card backgrounds, table stripes |
 | `--neutral-200` | Border gray | `#E4E4E7` | Borders, dividers |
+| `--neutral-500` | Mid gray | `#71717A` | Placeholder text, disabled |
 | `--neutral-600` | Body text | `#52525B` | Secondary text |
 | `--neutral-900` | Headings | `#18181B` | Headings, primary text |
 | `--success` | Positive | `#16A34A` | Approved, confirmed, good attendance |
-| `--warning` | Caution | `#EAB308` | Waitlisted, below threshold |
+| `--warning` | Caution | `#EAB308` | Waitlisted, below 70% threshold |
 | `--danger` | Error/alert | `#DC2626` | Rejected, low attendance, errors |
 | `--info` | Informational | `#2563EB` | Links, info tooltips |
 
-Rationale: Warm orange/saffron as primary evokes community warmth and is culturally resonant in India. Teal as secondary provides strong contrast. All text/background combinations meet WCAG AA contrast ratios.
+**Rationale:** The blue-green palette directly mirrors the Renukiran logo. Deep blue (`#2B5EA7`) as primary conveys institutional trust and reliability — critical for an NGO serving underserved communities. Bright green (`#7CB518`) as accent conveys growth and opportunity — used strategically on enrollment CTAs and positive outcomes. The dual-brand approach gives the admin interface a professional blue tone while the user-facing portal uses warmer green accents for approachability. All text/background combinations meet WCAG AA contrast ratios (4.5:1 minimum).
 
 ### 3.2 Typography
 
 | Level | Font | Size (Desktop / Mobile) | Weight | Usage |
 |-------|------|------------------------|--------|-------|
-| Display | Noto Sans | 32px / 24px | 700 | Page titles |
-| H1 | Noto Sans | 24px / 20px | 600 | Section headers |
-| H2 | Noto Sans | 20px / 18px | 600 | Card headers |
-| H3 | Noto Sans | 16px / 16px | 600 | Sub-sections |
-| Body | Noto Sans | 16px / 14px | 400 | Default text |
-| Body-sm | Noto Sans | 14px / 13px | 400 | Table cells, captions |
-| Label | Noto Sans | 12px / 12px | 500 | Form labels, badges |
+| Display | Inter | 32px / 24px | 700 | Page titles |
+| H1 | Inter | 24px / 20px | 600 | Section headers |
+| H2 | Inter | 20px / 18px | 600 | Card headers |
+| H3 | Inter | 16px / 16px | 600 | Sub-sections |
+| Body | Inter | 16px / 14px | 400 | Default text |
+| Body-sm | Inter | 14px / 13px | 400 | Table cells, captions |
+| Label | Inter | 12px / 12px | 500 | Form labels, badges |
 
-Noto Sans chosen because it has unified glyphs for all 8 target scripts (Devanagari, Telugu, Kannada, Tamil, Malayalam, Bengali) with consistent x-height and visual weight. Font loading: preload Latin + user's selected script, lazy-load others.
+**Primary font: Inter** — chosen for its excellent readability at small sizes, tabular number support (critical for attendance percentages and slot counts), and variable font support for optimal loading. **Fallback for Indic scripts: Noto Sans** (Devanagari, Telugu, Kannada, Tamil, Malayalam, Bengali variants) — provides unified glyphs across all 8 target scripts with consistent x-height. Font loading strategy: preload Inter Latin + Noto Sans for user's selected script, lazy-load others.
 
 ### 3.3 Spacing & Grid
 
@@ -172,7 +179,14 @@ Noto Sans chosen because it has unified glyphs for all 8 target scripts (Devanag
 
 ## 4. Page-by-Page Screen Designs
 
+Each screen includes a wireframe for structural reference and a link to its high-fidelity screenshot mockup.
+
+---
+
 ### 4.1 Authentication — Login Screen (`/`)
+
+**Screenshot:** [`docs/screenshots/01-login.png`](../screenshots/01-login.png)
+**HTML Mockup:** [`docs/mockups/01-login.html`](../mockups/01-login.html)
 
 ```
 +---------------------------------------------------+
@@ -200,11 +214,27 @@ Noto Sans chosen because it has unified glyphs for all 8 target scripts (Devanag
 +---------------------------------------------------+
 ```
 
-Interaction notes:
-- Country code defaults to +91 (India), dropdown for others
-- Language selector persists choice in localStorage, applies immediately
+**UX Design Rationale:**
+- **Single-purpose screen.** Only one action is possible: enter phone number. This eliminates confusion for users with limited digital literacy. No registration link, no social login — just phone + OTP.
+- **Language selector is pre-auth.** Placed in the top-right corner and available before any interaction, so users can switch to their native language (Hindi, Telugu, etc.) immediately. Persisted in localStorage across sessions.
+- **Logo with human figures.** The abstract SVG figures from the Renukiran logo appear above the brand name, reinforcing the NGO's community identity. "Renukiran" rendered in brand green, "WELFARE FOUNDATION" in brand blue.
+- **+91 country code prefix.** Displayed in a separate box to the left of the phone input, defaulting to India. This prevents input errors and makes the phone field feel familiar.
+- **"New here? Contact your training center"** — Deliberately avoids a self-registration flow. Admin-controlled user creation ensures data quality and prevents unauthorized access. The link provides center contact info.
+- **Subtle gradient background.** Blue-50 to white gradient creates depth without distraction. The centered card with shadow-lg provides a clear focal point.
+
+**Interaction Details:**
+- Country code defaults to +91 (India), dropdown available for others
+- Phone input accepts 10 digits, auto-formats with space (98765 43210)
+- "Send OTP" button remains disabled until 10 digits are entered
+- On submit: loading spinner on button, then redirect to OTP screen
+- Error state: red border on input + "Phone number not registered. Contact your center."
+
+---
 
 ### 4.2 Authentication — OTP Verification
+
+**Screenshot:** [`docs/screenshots/02-otp-verify.png`](../screenshots/02-otp-verify.png)
+**HTML Mockup:** [`docs/mockups/02-otp-verify.html`](../mockups/02-otp-verify.html)
 
 ```
 +---------------------------------------------------+
@@ -225,11 +255,24 @@ Interaction notes:
 +---------------------------------------------------+
 ```
 
+**UX Design Rationale:**
+- **Lock icon** centered above the heading provides a visual security cue — users understand they're in a verification step.
+- **Masked phone number** (98765 XXXXX) confirms the correct number was entered without exposing the full number.
+- **6 segmented input boxes** (48x56px each) — each box holds one digit. Filled boxes show the digit with a blue border and light blue background. The active box has a focus glow. Remaining boxes show a dot placeholder. This is more intuitive than a single text field for users unfamiliar with OTP flows.
+- **Auto-advance behavior.** After entering a digit, focus automatically moves to the next box. Supports clipboard paste of the full OTP code.
+- **Back arrow** (top-left) returns to login screen to re-enter phone number if wrong.
+- **Resend countdown** (30 seconds) prevents accidental spam. Timer shown in brand-blue for visibility. After countdown, "Resend" becomes a clickable link.
+
+**Interaction Details:**
 - OTP fields auto-advance on digit entry, support clipboard paste
 - Resend countdown: 30 seconds, then "Resend OTP" link becomes active
-- After successful OTP, system determines role (admin/user) and redirects
+- After successful OTP, system determines role (admin/user) from the database and redirects to the appropriate portal
+- After 3 failed attempts: "Too many attempts. Try again in 5 minutes." message
 
 ### 4.3 Admin Dashboard (`/admin/dashboard`)
+
+**Screenshot:** [`docs/screenshots/03-admin-dashboard.png`](../screenshots/03-admin-dashboard.png)
+**HTML Mockup:** [`docs/mockups/03-admin-dashboard.html`](../mockups/03-admin-dashboard.html)
 
 ```
 +----------------------------------------------------------------------+
@@ -262,29 +305,56 @@ Interaction notes:
 +----------------------------------------------------------------------+
 ```
 
-Dashboard widgets:
+**UX Design Rationale:**
+- **260px persistent sidebar** with Renukiran branding at top ("RWF" in green, "WELFARE FOUNDATION" in blue). Active nav item has a 3px blue left border and light blue background for clear wayfinding. Navigation items are 44px tall for easy click/touch targets.
+- **Four stat cards** at top give an instant operational snapshot. Each card is clickable — "Pending Approvals" navigates directly to the batch allocation screen. Numbers are displayed at 32px bold for at-a-glance reading. Each card has a subtle colored icon background matching its semantic meaning.
+- **Recent Enrollments table** (60% width) shows the 5 latest enrollments with color-coded status badges (Pending=yellow, Approved=green, Waitlisted=orange). "View All" link provides quick access to full enrollment management.
+- **Training Capacity bars** (40% width) use color-coded progress bars — green when under 60% full, yellow at 60-90%, red above 90%. This instantly flags which trainings are nearing capacity and need admin attention.
+- **Attendance Alerts** section below the fold shows users below the 70% threshold with a one-click "Send Alert" button. Warning icon and red percentage text make at-risk users immediately visible.
+- **Top bar** includes language selector (persistent across all admin pages), notification bell with red badge count, and admin avatar with initials.
+
+**Dashboard Widgets:**
 1. Stat Cards (top row) — Active trainings, Total enrolled, Pending approvals, Waitlist count. Clickable — navigates to relevant list
 2. Recent Enrollments Table — Last 5 enrollments with quick status. "View All" goes to full enrollment management
 3. Training Capacity Bars — Visual fill indicator per training (green->yellow->red as capacity fills)
 4. Attendance Alerts (below fold) — Users below 70% threshold, with "Send Alert" quick action
 
+---
+
 ### 4.4 Training Management (`/admin/trainings`)
 
-Training list view with search, filter, sort. Each training is a card showing:
+**Screenshot (List):** [`docs/screenshots/04-admin-trainings.png`](../screenshots/04-admin-trainings.png)
+**Screenshot (Add Modal):** [`docs/screenshots/05-admin-add-training.png`](../screenshots/05-admin-add-training.png)
+**HTML Mockups:** [`04-admin-trainings.html`](../mockups/04-admin-trainings.html), [`05-admin-add-training.html`](../mockups/05-admin-add-training.html)
+
+**UX Design Rationale:**
+- **Card-based list** (not a table) for trainings — each card shows a category icon on a colored background (yellow for stitching, blue for computers, pink for beauty, green for design), making visual scanning fast. Status badges (Active=green, Upcoming=blue, Closed=gray) appear next to the title.
+- **Capacity progress bar** on each card gives immediate visual feedback on slot fill level without needing to open the training detail.
+- **Search + Filter + Sort toolbar** — search is real-time, filters allow narrowing by status or category, sort allows ordering by name/capacity/date.
+- **"+ Add Training" button** (brand blue, top-right) opens a centered modal overlay with a blurred/dimmed backdrop, keeping the user's context visible behind it.
+- **Add Training Modal** (560px max-width) has clear field grouping: identity (name, category), logistics (duration, max slots), scheduling (timeslots with morning/evening time pickers), content (description), and status (radio buttons). "+ Add Timeslot" link allows adding custom timeslots beyond morning/evening.
+
+**Training List Details:**
 - Name, category icon, status badge (Active/Upcoming/Closed)
-- Duration, slot capacity (used/total)
+- Duration, slot capacity (used/total) with progress bar
 - Timeslot details (Morning/Evening times)
 - Actions: View Details, Edit, overflow menu (Delete, Clone, Close)
 
-Add/Edit Training Modal fields:
+**Add/Edit Training Modal Fields:**
 - Training Name (required)
 - Category (dropdown: Stitching, Computers, Beauty, Design, etc.)
 - Duration (months), Max Slots per Batch (default 20)
 - Timeslots: Morning (start-end), Evening (start-end), with [+ Add Timeslot]
 - Description (textarea)
-- Status: Active / Upcoming / Closed
+- Status: Active / Upcoming / Closed (radio buttons)
+
+---
 
 ### 4.5 Batch Allocation (`/admin/batches/:id`) — Core Admin Workflow
+
+**Screenshot (Table):** [`docs/screenshots/06-admin-batch-allocation.png`](../screenshots/06-admin-batch-allocation.png)
+**Screenshot (Confirm Dialog):** [`docs/screenshots/07-admin-batch-confirm-dialog.png`](../screenshots/07-admin-batch-confirm-dialog.png)
+**HTML Mockups:** [`06-admin-batch-allocation.html`](../mockups/06-admin-batch-allocation.html), [`07-admin-batch-confirm-dialog.html`](../mockups/07-admin-batch-confirm-dialog.html)
 
 ```
 +------------------------------------------------------------------------+
@@ -317,23 +387,30 @@ Add/Edit Training Modal fields:
 +------------------------------------------------------------------------+
 ```
 
-Interaction flows:
+**UX Design Rationale — This is the most critical screen in the entire application:**
+- **Slot capacity indicators at top** — two cards showing Morning (18/20) and Evening (15/20) with progress bars. These update in real-time as the admin approves users, providing constant awareness of remaining capacity. Yellow bar at 90%, green at 75%.
+- **Sticky bulk action bar** — appears only when rows are selected. Blue-light background (`#EBF0F9`) makes it visually distinct. Shows selection count ("3 selected") with color-coded action buttons: green Approve, yellow-outline Waitlist, red-outline Reject, neutral Email. This bar stays visible when scrolling through long lists.
+- **Default sort by enrollment date** — implements the FCFS (First Come First Serve) requirement. The earliest enrollees appear first, making the admin's decision-making intuitive: work top-to-bottom.
+- **Pref 1 and Pref 2 columns** — the two slot preference columns are the key differentiator of this screen. Admins can see at a glance which slot each user prefers and their backup choice, enabling informed allocation decisions.
+- **Selected rows highlighted** — checked rows get a light blue background tint, making the current selection visually obvious even in long lists. The header checkbox shows an indeterminate state (dash) when some rows are selected.
+- **Confirmation dialog** (07 screenshot) — prevents accidental bulk actions. Lists each user with their assigned slot using arrow notation (Priya Sharma -> Morning Slot). Includes a yellow warning box when a slot is nearly full. Checkbox to "Send confirmation emails immediately" defaults to checked for efficiency.
+
+**Interaction Flows:**
 1. Select users via checkboxes -> sticky bulk action bar appears at top
 2. Approve -> assigns user to Pref 1 slot. If Pref 1 full, dialog: "Assign to Pref 2?"
 3. Waitlist -> marks as waitlisted, user remains in queue
 4. Reject -> optional reason dialog
 5. Send Confirmation Emails -> emails all newly Approved users
-6. Send Waitlist Notifications -> sends Opt Out / Wait deep-link emails
+6. Send Waitlist Notifications -> sends Opt Out / Wait deep-link emails to all Waitlisted users
 7. Date column shows enrollment timestamp for FCFS ordering (default sort)
 8. Slot capacity bars at top update in real-time as admins approve/remove
 
-Approval Confirmation Dialog:
-- Lists users being approved with their assigned slot
-- Shows slot capacity warning if nearing full
-- Checkbox: "Send confirmation emails immediately"
-- Actions: Cancel, Confirm & Save
+---
 
 ### 4.6 Attendance Management (`/admin/trainings/:id` -> Attendance Tab)
+
+**Screenshot:** [`docs/screenshots/08-admin-attendance.png`](../screenshots/08-admin-attendance.png)
+**HTML Mockup:** [`docs/mockups/08-admin-attendance.html`](../mockups/08-admin-attendance.html)
 
 ```
 +--------------------------------------------------------------------+
@@ -361,17 +438,44 @@ Approval Confirmation Dialog:
 +--------------------------------------------------------------------+
 ```
 
-- Date navigator with arrows and calendar picker
-- Slot filter (Morning/Evening)
-- Attendance % with color thresholds: green (>80%), yellow (70-80%), red (<70%)
-- "Send Low Attendance Alerts" only appears when users are below 70%
-- Streak column shows consecutive present/absent days
+**UX Design Rationale:**
+- **Tab-based navigation** within the training detail view (Slots | Enrollments | Attendance). The active "Attendance" tab has a blue underline indicator. This keeps all training-related management in one place.
+- **Date navigator** with left/right arrows and a calendar icon allows quick day-by-day navigation. The current date is displayed prominently. Slot dropdown (Morning/Evening) filters the attendance list.
+- **"Class 15 of 48 | Marked: 16/18"** — progress context tells the admin exactly where they are in the training cycle and how many students they've already marked today.
+- **Attendance % column** uses a three-tier color system with both a colored dot and a mini progress bar: green dot + green bar (>80%), yellow dot + yellow bar (70-80%), red dot + red bar (<70%). This dual encoding ensures accessibility — the information is conveyed through color, shape, AND text.
+- **Present/Absent radio buttons** are styled as clear, large circular buttons (green outline for Present selected, red for Absent). The visual distinction prevents marking errors.
+- **Streak column** shows consecutive present days (with a checkmark) or consecutive absent days. This provides motivational context for the admin.
+- **Alert column** shows "Below 70%" (red badge) and "At risk" (yellow badge) warnings only for users who need attention.
+- **"Send Low Attendance Alerts" button** — appears in danger-outline style only when users are below 70%. Shows the count "(2 users)" so the admin knows the scope before clicking. Placed next to "Save Attendance" for a natural workflow: mark attendance -> save -> send alerts.
+- **"Mark All Present" button** — convenience for days when most students are present; admin can then mark individual absences.
+
+---
 
 ### 4.7 User Management (`/admin/users`)
 
-Data table with search, role filter, status filter. Columns: checkbox, Name, Phone, Role (Admin/User), Training, Status (Active/Inactive/Waitlist). Bulk actions: Delete, Export CSV. Add User modal: Name, Phone, Email (optional), Role, Center.
+**Screenshot:** [`docs/screenshots/09-admin-users.png`](../screenshots/09-admin-users.png)
+**HTML Mockup:** [`docs/mockups/09-admin-users.html`](../mockups/09-admin-users.html)
+
+**UX Design Rationale:**
+- **Avatar initials** next to each name provide visual anchoring and make the table feel more personal than a plain text list.
+- **Role badges** — "Admin" in blue pill, "User" in gray pill — make role identification instant. Admins are visually distinct from regular users.
+- **Status badges** — Active (green dot + green badge), Waitlisted (orange), Inactive (gray) — use the same color vocabulary as the rest of the system for consistency.
+- **Edit/Delete action buttons** per row (icon buttons) for quick user management. Delete requires confirmation dialog.
+- **Bulk actions** (Delete, Export CSV) appear at the bottom. Export CSV enables admins to generate reports for donor/CSR dashboards.
+
+**Details:**
+- Data table with search, role filter, status filter
+- Columns: checkbox, Name (with avatar), Phone, Role (Admin/User), Training, Status (Active/Inactive/Waitlist)
+- Bulk actions: Delete, Export CSV
+- Add User modal: Name, Phone, Email (optional), Role, Center
+- Pagination: "Showing 1-8 of 142 users"
+
+---
 
 ### 4.8 User Portal — Browse Trainings (`/user/trainings`)
+
+**Screenshot:** [`docs/screenshots/10-user-browse-trainings.png`](../screenshots/10-user-browse-trainings.png)
+**HTML Mockup:** [`docs/mockups/10-user-browse-trainings.html`](../mockups/10-user-browse-trainings.html)
 
 ```
 +--------------------------------------------------------------+
@@ -405,39 +509,81 @@ Data table with search, role filter, status filter. Columns: checkbox, Name, Pho
 +--------------------------------------------------------------+
 ```
 
-Larger fonts, warmer tone, simpler language than admin portal.
+**UX Design Rationale — This is the primary user-facing screen:**
+- **Simpler navigation.** Top bar (not sidebar) with only 3 nav items: Trainings, My Courses, Profile. The Renukiran logo text ("Renukiran" in green, "Learning Portal" in blue) provides brand presence without a heavy sidebar.
+- **Language selector in native script.** Displayed as "hindi" (in Devanagari) with a dropdown arrow, not "Hindi" in English. This helps non-English speakers identify and use the switcher.
+- **Warm, encouraging copy.** "Choose a course to start your learning journey" — welcoming language for first-time users from underserved communities.
+- **Large, spacious training cards.** Each card has generous padding (24px), full-width layout, clear hierarchy: title (bold, 20px) -> description -> metadata -> slot availability -> CTA. No cognitive overload.
+- **Slot availability with urgency indicators.** "2 seats left" in orange badge creates appropriate urgency. "14 seats left" in green feels relaxed. "FULL" in gray with "Registration Full" badge clearly communicates unavailability. "1 seat left" in red badge creates high urgency.
+- **Full-width green "Enroll Now" button.** Brand green (`#7CB518`) is used for the primary user action across the portal. The button is 48px tall — oversized for easy touch targets. On the "upcoming" card (Design Basics), the button is replaced with a muted "Coming Soon" text.
+- **Max-width 960px centered.** Narrower than the admin portal (1280px) to maintain comfortable reading width and a less overwhelming feel.
+
+---
 
 ### 4.9 Enrollment Flow (`/user/trainings/:id`)
 
-- Training detail page with description, duration, start date, class count
-- Slot selection: two radio groups for Preferred Slot (Option 1) and Backup Slot (Option 2)
-- Each option shows slot time and remaining seats
-- Submit button with info text: "Your enrollment will be reviewed by the admin"
-- Post-submission: confirmation card with "What happens next" steps (1. Admin reviews, 2. SMS confirmation, 3. Training starts date)
+**Screenshot (Form):** [`docs/screenshots/11-user-enrollment.png`](../screenshots/11-user-enrollment.png)
+**Screenshot (Success):** [`docs/screenshots/12-user-enrollment-success.png`](../screenshots/12-user-enrollment-success.png)
+**HTML Mockups:** [`11-user-enrollment.html`](../mockups/11-user-enrollment.html), [`12-user-enrollment-success.html`](../mockups/12-user-enrollment-success.html)
+
+**UX Design Rationale:**
+- **"Back to Trainings" link** at top-left provides clear escape route. Users never feel trapped.
+- **Training header card** repeats the training name, description, and key metadata (duration, class count, start date) so the user has full context while making their slot choice.
+- **Large radio cards** (not small radio buttons) — each slot option is a full-width clickable card (approx 140px tall) with the slot name (MORNING/EVENING), time range in bold, and remaining seats badge. The selected card gets a blue border and light blue background tint. This design is critical for low-digital-literacy users who may struggle with small radio inputs.
+- **Two selection groups** — "Preferred Slot (Option 1)" and "Backup Slot (Option 2)" are clearly labeled with red asterisks for required fields. The user selects one slot in each group.
+- **Info box below the submit button** (light blue background, info icon) explains: "Your enrollment will be reviewed by the admin. You'll receive a confirmation via SMS." This sets correct expectations — the user won't wonder why they don't have instant access.
+- **Success page** (12 screenshot) — centered card with a large green CSS checkmark animation. Shows enrollment details (training, preferred slot, backup slot) followed by a numbered "What happens next?" section with 3 steps in blue numbered circles. This reduces anxiety by explaining the process.
+
+---
 
 ### 4.10 User Dashboard (`/user/dashboard`)
 
-- Welcome greeting with user's name
-- Current training card: name, slot, date range
-- Two stat circles: Attendance % (color-coded) and Progress (class X of Y)
-- Attendance calendar: month view with green dots (present), red dots (absent), empty (no class)
-- Legend: Present count, Absent count
-- Enrollment status and next class info
+**Screenshot:** [`docs/screenshots/13-user-dashboard.png`](../screenshots/13-user-dashboard.png)
+**HTML Mockup:** [`docs/mockups/13-user-dashboard.html`](../mockups/13-user-dashboard.html)
+
+**UX Design Rationale:**
+- **Personal welcome.** "Welcome back, Priya!" with subtitle "Here's your learning progress" — warm, personal, encouraging.
+- **Current training card** prominently displays the training name, slot assignment, date range, and a green "Confirmed" badge. This is the first thing the user sees — answering the question "Am I enrolled? In what? When?"
+- **Two circular progress rings** using CSS conic-gradient — Attendance (87%, green ring with "Good!" tag) and Progress (31%, blue ring with "Class 15/48" tag). The circular visualization is universally understood and creates a sense of accomplishment. Color-coding: green >80%, yellow 70-80%, red <70%.
+- **Attendance calendar** — month-view grid (Mon-Sun columns) with color-coded dots on each day: green dots for present, red dots for absent, empty circles for no-class days (weekends/holidays). The legend at the bottom shows totals: "Present (23) Absent (2) No class." This gives users a complete at-a-glance view of their attendance pattern. Month navigation arrows allow viewing history.
+- **"Next Class" info bar** — blue-tinted bar at bottom with calendar icon: "Next Class: March 1, 9:00 AM." Answers the most common user question.
+
+---
 
 ### 4.11 Email Response Page (`/respond/:token`)
 
-- No auth required — token-validated
-- RWF logo, personalized greeting
-- Context: which training, which slot, waitlist position
-- Two large action cards:
-  - "Wait for Next Batch" — with explanation text
-  - "Opt Out" — with explanation text
-- After selection: confirmation message with "Go to Renukiran Portal" link
-- Token validity: 7 days, shown at bottom
+**Screenshot (Choice):** [`docs/screenshots/14-email-response.png`](../screenshots/14-email-response.png)
+**Screenshot (Confirmation):** [`docs/screenshots/15-email-response-confirm.png`](../screenshots/15-email-response-confirm.png)
+**HTML Mockups:** [`14-email-response.html`](../mockups/14-email-response.html), [`15-email-response-confirm.html`](../mockups/15-email-response-confirm.html)
+
+**UX Design Rationale:**
+- **No navigation bar, no login required.** This page is accessed from an email link with a secure token. The standalone layout (centered card, no nav, gradient background matching the login page) makes it feel like a dedicated response form, not a full portal page. This eliminates friction for users who may not remember their login.
+- **RWF branding at top** (same logo treatment as login page) — provides trust and brand recognition.
+- **Personalized greeting.** "Hi Radha," — uses the user's first name from the database. Context paragraph explains the situation clearly: which training, which slot, and the waitlist position ("#3 on the waitlist" in bold blue).
+- **Two large action cards** (not small buttons) — each card is a full-width clickable area with an icon, title in bold, and explanation text. "Wait for Next Batch" has a blue border and an hourglass icon. "Opt Out" has a neutral border and an X icon. The explanation text reduces the cognitive load of the decision.
+- **Token validity notice** at bottom — "This link is valid for 7 days" prevents confusion about expired links.
+- **Confirmation page** (15 screenshot) — clean centered card with a blue checkmark, confirming the response was saved and what the user chose. "Go to Renukiran Portal" button provides an optional next step.
+
+---
 
 ### 4.12 Notification Log (`/admin/notifications`)
 
-Data table with filters: Type (Confirmation/Waitlist/Low Attendance/General), Status (Sent/Delivered/Opened/Failed), Date range. Columns: Date, Recipient, Type, Status, Response (for waitlist emails: Waiting/Opted Out/Pending).
+**Screenshot:** [`docs/screenshots/16-admin-notifications.png`](../screenshots/16-admin-notifications.png)
+**HTML Mockup:** [`docs/mockups/16-admin-notifications.html`](../mockups/16-admin-notifications.html)
+
+**UX Design Rationale:**
+- **Comprehensive filter row** — four filters (Type, Status, Date Range, Search) allow admins to quickly find specific notifications. This is important for auditing and troubleshooting email delivery issues.
+- **Color-coded type badges** — Waitlist (blue), Low Attendance (red), Confirmation (green), General (gray) — make visual scanning of the table fast.
+- **Status column uses colored text** — Sent (gray), Delivered (blue), Opened (green), Failed (red) — providing delivery state at a glance.
+- **Response column** — for waitlist notifications, shows the user's response: Waiting (blue badge), Opted Out (gray badge), Pending (yellow badge). This closes the feedback loop — admins can see who responded to waitlist emails without leaving the page.
+- **"Resend" action** for failed notifications — appears in red text only on failed rows, providing a one-click recovery action.
+- **Summary bar** at bottom of the table with totals: "Total: 47 | Delivered: 38 | Opened: 22 | Failed: 2" — gives admins a quick health check on their notification pipeline.
+
+**Details:**
+- Data table with filters: Type (Confirmation/Waitlist/Low Attendance/General), Status (Sent/Delivered/Opened/Failed), Date range
+- Columns: Date, Recipient, Type, Status, Response (for waitlist emails), Actions
+- Pagination with page numbers
+- Summary bar with delivery statistics
 
 ---
 
@@ -602,86 +748,6 @@ Dropdown showing each language in its native script with English name in parenth
 
 ---
 
-## 9. Tech Stack Recommendation
-
-### Recommended: Next.js 15 + shadcn/ui + Tailwind CSS 4
-
-### 9.1 Next.js 15 (App Router)
-
-Why Next.js over Vite/CRA/Remix:
-
-- **Server Components reduce bundle size.** Admin data tables (batch allocation, attendance grids, user lists) render on the server and send only HTML. Users on low-bandwidth connections get faster initial page loads.
-
-- **Route-based code splitting is automatic.** Admin portal (`/admin/*`) and user portal (`/user/*`) are separate route groups with separate bundles. A beneficiary never downloads admin table code.
-
-- **Built-in API routes for the email response page.** `/respond/:token` needs a server endpoint to validate tokens and record responses. Next.js API routes handle this without a separate backend.
-
-- **`next-intl` is the best i18n solution for 8 languages.** Native App Router integration, SSR for translated content, ICU message format for Hindi/Marathi pluralization, automatic locale detection via middleware.
-
-- **Image optimization.** `next/image` auto-serves WebP/AVIF with responsive sizing.
-
-- **Middleware for auth.** Protects admin routes at the edge before any page code loads.
-
-### 9.2 shadcn/ui
-
-Why shadcn/ui over Mantine, Chakra, Ant Design, Material UI:
-
-- **You own the code.** Components are copied into `components/ui/`. Custom brand styling means editing files directly, not fighting theme APIs or `!important` overrides.
-
-- **Built on Radix Primitives.** Every component gets WCAG-compliant keyboard navigation, focus management, and ARIA attributes. The admin batch allocation table's checkbox selection, modal confirmations, and toast notifications all need this accessibility foundation.
-
-- **No dependency lock-in.** Mantine (~6.5MB) and Ant Design (~11MB) are full packages. shadcn/ui components are files in your repo — you control the upgrade timeline.
-
-- **Tailwind-native.** No theme object to learn, no CSS-in-JS runtime overhead. Design tokens are CSS variables consumed by both Tailwind and custom components.
-
-- **No unused code.** You only copy components you need. For MVP1: ~15 components (Button, Input, Table, Dialog, Tabs, Badge, Card, Select, Dropdown, Toast, Avatar, Skeleton, Sheet, Popover, Command).
-
-Key shadcn/ui components for this project:
-
-| Component | Usage |
-|-----------|-------|
-| DataTable | Batch allocation, user list, attendance grid, notification log |
-| Dialog | Approval confirmation, add training, add user |
-| Sheet | Mobile sidebar navigation, filter panels |
-| Command | Search-enabled language picker, training search |
-| Tabs | Training detail view (Slots / Enrollments / Attendance) |
-| Badge | Enrollment status indicators |
-| Toast | Success/error notifications after bulk actions |
-| Form (+react-hook-form +zod) | All forms with validation |
-
-### 9.3 Tailwind CSS 4
-
-Why Tailwind over CSS Modules, Styled Components, vanilla CSS:
-
-- **Responsive design is declarative.** `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3` handles training card layout across all breakpoints in one line.
-
-- **Design tokens as CSS variables.** Tailwind 4's `@theme` maps to the design system. When brand colors are finalized, one file changes and the entire app updates.
-
-- **No runtime cost.** Compiles to static CSS. No JavaScript overhead (unlike Styled Components or Emotion). Matters on low-powered phones.
-
-- **Consistent spacing.** The 4px base unit maps to Tailwind's scale (`p-1` = 4px, `p-2` = 8px). Every developer uses the same system.
-
-### 9.4 Supporting Libraries
-
-| Library | Purpose | Why |
-|---------|---------|-----|
-| `next-intl` | i18n (8 languages) | Best Next.js App Router integration, SSR, ICU format |
-| `react-hook-form` + `zod` | Forms + validation | Performant, schema validation, TypeScript-native |
-| `@tanstack/react-table` | Data tables | Headless, works with shadcn/ui styling. Sort, filter, paginate, select |
-| `date-fns` | Date formatting | Locale-aware, tree-shakeable |
-| `lucide-react` | Icons | Consistent set, tree-shakeable, used by shadcn/ui |
-| `nuqs` | URL state | Type-safe URL search params for filters, pagination |
-| `sonner` | Toasts | shadcn/ui recommended, accessible |
-
-### 9.5 Backend Suggestion (for context)
-
-While outside UI/UX scope, consider:
-- Supabase or Firebase for auth (phone OTP built-in), database, and email triggers
-- Resend or SendGrid for transactional emails
-- PostgreSQL for relational data (trainings -> batches -> enrollments -> attendance)
-
----
-
 ## Appendix: Email Templates
 
 ### A.1 Enrollment Confirmation Email
@@ -701,3 +767,30 @@ Token validity: 7 days.
 
 Subject: "Attendance alert for [Training Name]"
 Body: Current attendance %, minimum required (70%), classes attended vs total, encouragement message, "View Attendance" button (deep link to portal).
+
+---
+
+## Appendix: Screen Inventory
+
+Complete list of all screens with their artifact files.
+
+| # | Screen | Route | Screenshot | HTML Mockup |
+|---|--------|-------|------------|-------------|
+| 01 | Login | `/` | `screenshots/01-login.png` | `mockups/01-login.html` |
+| 02 | OTP Verification | `/verify` | `screenshots/02-otp-verify.png` | `mockups/02-otp-verify.html` |
+| 03 | Admin Dashboard | `/admin/dashboard` | `screenshots/03-admin-dashboard.png` | `mockups/03-admin-dashboard.html` |
+| 04 | Training List | `/admin/trainings` | `screenshots/04-admin-trainings.png` | `mockups/04-admin-trainings.html` |
+| 05 | Add Training Modal | `/admin/trainings` (modal) | `screenshots/05-admin-add-training.png` | `mockups/05-admin-add-training.html` |
+| 06 | Batch Allocation | `/admin/batches/:id` | `screenshots/06-admin-batch-allocation.png` | `mockups/06-admin-batch-allocation.html` |
+| 07 | Allocation Confirm | `/admin/batches/:id` (dialog) | `screenshots/07-admin-batch-confirm-dialog.png` | `mockups/07-admin-batch-confirm-dialog.html` |
+| 08 | Attendance Mgmt | `/admin/trainings/:id/attendance` | `screenshots/08-admin-attendance.png` | `mockups/08-admin-attendance.html` |
+| 09 | User Management | `/admin/users` | `screenshots/09-admin-users.png` | `mockups/09-admin-users.html` |
+| 10 | Browse Trainings | `/user/trainings` | `screenshots/10-user-browse-trainings.png` | `mockups/10-user-browse-trainings.html` |
+| 11 | Enrollment Form | `/user/trainings/:id` | `screenshots/11-user-enrollment.png` | `mockups/11-user-enrollment.html` |
+| 12 | Enrollment Success | `/user/trainings/:id/success` | `screenshots/12-user-enrollment-success.png` | `mockups/12-user-enrollment-success.html` |
+| 13 | User Dashboard | `/user/dashboard` | `screenshots/13-user-dashboard.png` | `mockups/13-user-dashboard.html` |
+| 14 | Email Response | `/respond/:token` | `screenshots/14-email-response.png` | `mockups/14-email-response.html` |
+| 15 | Response Confirm | `/respond/:token/confirm` | `screenshots/15-email-response-confirm.png` | `mockups/15-email-response-confirm.html` |
+| 16 | Notification Log | `/admin/notifications` | `screenshots/16-admin-notifications.png` | `mockups/16-admin-notifications.html` |
+
+All screenshot and mockup files are located under `docs/` relative to the project root.
