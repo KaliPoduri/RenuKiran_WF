@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Course — Renukiran LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #FAFAFA;
+    color: #52525B;
+    line-height: 1.5;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar (same as course management) ── */
+  .sidebar {
+    width: 260px; min-height: 100vh; background: #FFFFFF;
+    border-right: 1px solid #E4E4E7; display: flex; flex-direction: column;
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+  }
+
+  .sidebar-brand { padding: 24px 20px 20px; border-bottom: 1px solid #E4E4E7; }
+
+  .brand-logo { display: flex; align-items: center; gap: 12px; }
+  .brand-icon svg { display: block; }
+  .brand-text .brand-name { font-size: 18px; font-weight: 700; color: #7CB518; line-height: 1.2; }
+  .brand-text .brand-sub { font-size: 9px; font-weight: 600; letter-spacing: 2px; color: #2B5EA7; text-transform: uppercase; }
+
+  .sidebar-nav { flex: 1; padding: 12px 0; list-style: none; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px; font-size: 14px; font-weight: 500;
+    color: #52525B; text-decoration: none; cursor: pointer;
+    border-left: 3px solid transparent; min-height: 44px;
+    transition: background 0.12s, color 0.12s;
+  }
+  .nav-item:hover { background: #F4F4F5; color: #18181B; }
+  .nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+  .nav-item svg { flex-shrink: 0; width: 20px; height: 20px; }
+
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 11px; color: #A1A1AA; }
+
+  /* ── Main ── */
+  .main { margin-left: 260px; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+  .topbar {
+    height: 56px; background: #FFFFFF; border-bottom: 1px solid #E4E4E7;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-left { font-size: 15px; font-weight: 600; color: #18181B; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+
+  .notification-btn {
+    position: relative; width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    border: none; background: transparent; border-radius: 8px;
+    cursor: pointer; color: #52525B; transition: background 0.12s;
+  }
+  .notification-btn:hover { background: #F4F4F5; }
+
+  .notif-badge {
+    position: absolute; top: 4px; right: 4px; min-width: 18px; height: 18px;
+    background: #DC2626; color: #FFF; font-size: 10px; font-weight: 700;
+    border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px;
+  }
+
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: #2B5EA7;
+    color: #FFF; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+
+  .content { padding: 28px; flex: 1; }
+
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .page-title { font-size: 22px; font-weight: 700; color: #18181B; }
+
+  .btn-primary-page {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 44px; padding: 0 20px;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    color: #FFFFFF; background: #2B5EA7; border: none; border-radius: 6px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-primary-page:hover { background: #1E4A8A; }
+
+  /* Toolbar */
+  .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+
+  .search-input {
+    flex: 1; max-width: 340px; height: 40px; padding: 0 14px 0 38px;
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    background: #FFFFFF; border: 1px solid #E4E4E7; border-radius: 6px;
+    outline: none; color: #18181B;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: 12px center;
+  }
+  .search-input::placeholder { color: #71717A; }
+
+  .select-input {
+    height: 40px; padding: 0 32px 0 12px;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    background: #FFFFFF; border: 1px solid #E4E4E7; border-radius: 6px;
+    color: #18181B; cursor: pointer; outline: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717A' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: calc(100% - 10px) center;
+  }
+
+  /* Course cards (dimmed behind modal) */
+  .course-card {
+    background: #FFFFFF; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 16px; display: flex; overflow: hidden;
+  }
+  .card-accent { width: 5px; flex-shrink: 0; }
+  .accent-yellow { background: #EAB308; }
+  .accent-blue { background: #2B5EA7; }
+  .accent-pink { background: #EC4899; }
+
+  .card-body { flex: 1; padding: 20px 24px; }
+
+  .card-title {
+    font-size: 17px; font-weight: 600; color: #18181B; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; line-height: 1.6; }
+  .badge-active { background: #D1FAE5; color: #065F46; }
+  .badge-upcoming { background: #DBEAFE; color: #1D4ED8; }
+
+  .card-meta { display: flex; gap: 24px; font-size: 13px; color: #71717A; margin-bottom: 12px; }
+  .card-meta span { display: flex; align-items: center; gap: 5px; }
+  .card-meta svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .assessment-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 12px; color: #71717A; }
+  .assessment-label { font-weight: 500; color: #52525B; margin-right: 4px; }
+  .weight-tag { background: #F4F4F5; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+
+  .card-actions { display: flex; gap: 8px; }
+
+  .btn-outline {
+    height: 36px; padding: 0 14px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
+    background: #FFF; border: 1px solid #E4E4E7; border-radius: 6px; color: #18181B;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-outline.primary { color: #2B5EA7; border-color: #2B5EA7; }
+
+  .btn-icon {
+    width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; background: #FFF; border: 1px solid #E4E4E7; border-radius: 6px; color: #71717A; cursor: pointer;
+  }
+
+  /* ── Modal overlay ── */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  .modal {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #E4E4E7;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #18181B;
+  }
+
+  .modal-close {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: none; border-radius: 6px;
+    color: #71717A; cursor: pointer; transition: background 0.12s, color 0.12s;
+  }
+  .modal-close:hover { background: #F4F4F5; color: #18181B; }
+
+  .modal-body { padding: 20px 24px 8px; }
+
+  .form-group { margin-bottom: 18px; }
+
+  .form-label {
+    display: block; font-size: 13px; font-weight: 500;
+    color: #18181B; margin-bottom: 6px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%; height: 44px; padding: 0 14px;
+    font-family: 'Inter', sans-serif; font-size: 14px; color: #18181B;
+    background: #FAFAFA; border: 1px solid #E4E4E7; border-radius: 6px;
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder { color: #71717A; }
+
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    border-color: #2B5EA7;
+    box-shadow: 0 0 0 3px rgba(43,94,167,0.12);
+    background: #FFFFFF;
+  }
+
+  .form-select {
+    appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717A' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: calc(100% - 12px) center;
+    padding-right: 36px;
+  }
+
+  .form-textarea {
+    height: auto; padding: 12px 14px;
+    resize: vertical; min-height: 80px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* Assessment weights */
+  .assessment-section-label {
+    font-size: 13px; font-weight: 500; color: #18181B; margin-bottom: 10px;
+  }
+
+  .weight-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .weight-field label {
+    display: block; font-size: 12px; color: #71717A; margin-bottom: 4px;
+  }
+
+  .weight-input-wrapper {
+    position: relative;
+  }
+
+  .weight-input-wrapper .form-input {
+    padding-right: 28px;
+  }
+
+  .weight-input-wrapper .pct-symbol {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #71717A;
+    pointer-events: none;
+  }
+
+  .weight-total {
+    font-size: 13px;
+    font-weight: 600;
+    color: #16A34A;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .weight-total svg { width: 14px; height: 14px; }
+
+  /* Radio group */
+  .radio-group {
+    display: flex;
+    gap: 20px;
+  }
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #18181B;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .radio-label input[type="radio"] {
+    width: 18px; height: 18px;
+    accent-color: #2B5EA7;
+    cursor: pointer;
+  }
+
+  /* Modal footer */
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px 20px;
+    border-top: 1px solid #E4E4E7;
+    margin-top: 8px;
+  }
+
+  .btn-cancel {
+    height: 44px; padding: 0 20px;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    background: #FFFFFF; border: 1px solid #E4E4E7; border-radius: 6px;
+    color: #18181B; cursor: pointer; transition: background 0.12s;
+  }
+  .btn-cancel:hover { background: #F4F4F5; }
+
+  .btn-primary {
+    height: 44px; padding: 0 24px;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+    color: #FFFFFF; background: #2B5EA7; border: none; border-radius: 6px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-primary:hover { background: #1E4A8A; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle cx="12" cy="9" r="4" fill="#7CB518"/>
+          <path d="M12 14c-4.5 0-8 2.5-8 6v3h16v-3c0-3.5-3.5-6-8-6z" fill="#7CB518" opacity="0.75"/>
+          <circle cx="28" cy="9" r="4" fill="#2B5EA7"/>
+          <path d="M28 14c-4.5 0-8 2.5-8 6v3h16v-3c0-3.5-3.5-6-8-6z" fill="#2B5EA7" opacity="0.75"/>
+          <circle cx="20" cy="5" r="4.5" fill="#2B5EA7"/>
+          <path d="M20 11c-5 0-9 3-9 7v4h18v-4c0-4-4-7-9-7z" fill="#2B5EA7" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">Renukiran</div>
+        <div class="brand-sub">Welfare Foundation</div>
+      </div>
+    </div>
+  </div>
+
+  <ul class="sidebar-nav">
+    <li><a class="nav-item" href="02-admin-dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a></li>
+    <li><a class="nav-item active" href="03-course-management.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Courses
+    </a></li>
+    <li><a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Batches
+    </a></li>
+    <li><a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Users
+    </a></li>
+    <li><a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Reports
+    </a></li>
+    <li><a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Notifications
+    </a></li>
+  </ul>
+
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">Admin Panel</div>
+    <div class="topbar-right">
+      <button class="notification-btn" aria-label="Notifications">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-badge">3</span>
+      </button>
+      <div class="avatar">VA</div>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-header">
+      <h1 class="page-title">Courses</h1>
+      <button class="btn-primary-page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Course
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <input class="search-input" type="text" placeholder="Search courses...">
+      <select class="select-input"><option>All Status</option></select>
+      <select class="select-input"><option>Sort: Name</option></select>
+    </div>
+
+    <!-- Course cards (behind modal) -->
+    <div class="course-card">
+      <div class="card-accent accent-yellow"></div>
+      <div class="card-body">
+        <div class="card-title">Stitching Basic <span class="badge badge-active">Active</span></div>
+        <div class="card-meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3 months</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max: 20/batch</span>
+        </div>
+        <div class="assessment-row"><span class="assessment-label">Assessments:</span><span class="weight-tag">MCQ 30%</span><span class="weight-tag">Practical 50%</span><span class="weight-tag">Case Study 20%</span></div>
+        <div class="card-actions">
+          <button class="btn-outline">Edit</button>
+          <button class="btn-outline primary">View Batches</button>
+          <button class="btn-icon">&hellip;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="card-accent accent-blue"></div>
+      <div class="card-body">
+        <div class="card-title">Computer Fundamentals <span class="badge badge-active">Active</span></div>
+        <div class="card-meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2 months</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max: 20/batch</span>
+        </div>
+        <div class="assessment-row"><span class="assessment-label">Assessments:</span><span class="weight-tag">MCQ 40%</span><span class="weight-tag">Practical 40%</span><span class="weight-tag">Case Study 20%</span></div>
+        <div class="card-actions">
+          <button class="btn-outline">Edit</button>
+          <button class="btn-outline primary">View Batches</button>
+          <button class="btn-icon">&hellip;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="card-accent accent-pink"></div>
+      <div class="card-body">
+        <div class="card-title">Beauty Basic <span class="badge badge-upcoming">Upcoming</span></div>
+        <div class="card-meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3 months</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max: 20/batch</span>
+        </div>
+        <div class="assessment-row"><span class="assessment-label">Assessments:</span><span class="weight-tag">MCQ 20%</span><span class="weight-tag">Practical 60%</span><span class="weight-tag">Case Study 20%</span></div>
+        <div class="card-actions">
+          <button class="btn-outline">Edit</button>
+          <button class="btn-outline primary">View Batches</button>
+          <button class="btn-icon">&hellip;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Overlay -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Add New Course</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="courseName">Course Name</label>
+        <input class="form-input" type="text" id="courseName" placeholder="e.g. Advanced Stitching">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="category">Category</label>
+        <select class="form-select" id="category">
+          <option value="" disabled selected>Select a category</option>
+          <option>Stitching</option>
+          <option>Computers</option>
+          <option>Beauty</option>
+          <option>Bag Making</option>
+          <option>Food Enterprise</option>
+          <option>Handicraft</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="duration">Duration (months)</label>
+          <input class="form-input" type="number" id="duration" placeholder="e.g. 3" min="1" max="24">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="maxBatch">Max per Batch</label>
+          <input class="form-input" type="number" id="maxBatch" value="20" min="1" max="100">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="description">Description</label>
+        <textarea class="form-textarea" id="description" rows="3" placeholder="Brief course description..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <div class="assessment-section-label">Assessment Weights</div>
+        <div class="weight-inputs">
+          <div class="weight-field">
+            <label>MCQ</label>
+            <div class="weight-input-wrapper">
+              <input class="form-input" type="number" value="30" min="0" max="100" id="wMcq" oninput="updateTotal()">
+              <span class="pct-symbol">%</span>
+            </div>
+          </div>
+          <div class="weight-field">
+            <label>Practical</label>
+            <div class="weight-input-wrapper">
+              <input class="form-input" type="number" value="50" min="0" max="100" id="wPractical" oninput="updateTotal()">
+              <span class="pct-symbol">%</span>
+            </div>
+          </div>
+          <div class="weight-field">
+            <label>Case Study</label>
+            <div class="weight-input-wrapper">
+              <input class="form-input" type="number" value="20" min="0" max="100" id="wCase" oninput="updateTotal()">
+              <span class="pct-symbol">%</span>
+            </div>
+          </div>
+        </div>
+        <div class="weight-total" id="weightTotal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Total: 100%
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="status" value="active" checked> Active
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="status" value="upcoming"> Upcoming
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="status" value="closed"> Closed
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary">Save Course</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function closeModal() {
+  document.getElementById('modalBackdrop').style.display = 'none';
+}
+
+function updateTotal() {
+  var mcq = parseInt(document.getElementById('wMcq').value) || 0;
+  var prac = parseInt(document.getElementById('wPractical').value) || 0;
+  var cs = parseInt(document.getElementById('wCase').value) || 0;
+  var total = mcq + prac + cs;
+  var el = document.getElementById('weightTotal');
+
+  if (total === 100) {
+    el.style.color = '#16A34A';
+    el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Total: 100%';
+  } else {
+    el.style.color = '#DC2626';
+    el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Total: ' + total + '% (must equal 100%)';
+  }
+}
+</script>
+</body>
+</html>

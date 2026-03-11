@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Add Trainer - RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; }
+
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F4F4F5; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; }
+td { padding: 14px 16px; border-bottom: 1px solid #E4E4E7; font-size: 14px; color: #52525B; vertical-align: middle; }
+
+.avatar-name { display: flex; align-items: center; gap: 10px; }
+.avatar-sm { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; flex-shrink: 0; }
+.role-badge { display: inline-flex; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.role-admin { background: #DBEAFE; color: #1D4ED8; }
+.role-trainer { background: #CCFBF1; color: #0F766E; }
+.role-oc { background: #EDE9FE; color: #6D28D9; }
+.status-dot { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+.status-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.status-active { color: #16A34A; }
+.status-active::before { background: #16A34A; }
+
+/* Modal */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 100; display: flex; align-items: center; justify-content: center; }
+.modal { background: #fff; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); width: 540px; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #E4E4E7; }
+.modal-header-left { display: flex; align-items: center; gap: 12px; }
+.modal-role-icon { width: 40px; height: 40px; background: #CCFBF1; color: #0F766E; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.modal-title { font-size: 18px; font-weight: 700; color: #18181B; }
+.modal-subtitle { font-size: 12px; color: #71717A; margin-top: 1px; }
+.modal-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; font-size: 20px; color: #71717A; border-radius: 6px; }
+.modal-close:hover { background: #F4F4F5; color: #18181B; }
+.modal-body { padding: 24px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 24px; border-top: 1px solid #E4E4E7; }
+
+.section-label { font-size: 11px; font-weight: 700; color: #71717A; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; margin-top: 8px; }
+
+.form-group { margin-bottom: 18px; }
+.form-row { display: flex; gap: 16px; }
+.form-row .form-group { flex: 1; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: #18181B; margin-bottom: 6px; }
+.form-label .req { color: #DC2626; }
+.form-input { width: 100%; padding: 10px 14px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #18181B; transition: border-color 0.15s, box-shadow 0.15s; }
+.form-input:focus { outline: none; border-color: #2B5EA7; box-shadow: 0 0 0 3px rgba(43,94,167,0.12); }
+.form-input::placeholder { color: #A1A1AA; }
+.form-hint { font-size: 12px; color: #71717A; margin-top: 4px; }
+
+.password-wrapper { position: relative; }
+.password-wrapper .form-input { padding-right: 44px; }
+.password-toggle { position: absolute; right: 1px; top: 1px; bottom: 1px; width: 40px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: #71717A; font-size: 16px; border-radius: 0 6px 6px 0; }
+.password-toggle:hover { color: #18181B; }
+.password-gen { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; }
+.gen-btn { padding: 3px 10px; background: #EBF0F9; color: #2B5EA7; border: 1px solid #C7D6EE; border-radius: 4px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; }
+.gen-btn:hover { background: #D6E2F5; }
+
+/* Course assignment chips */
+.course-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.course-chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 2px solid #E4E4E7; border-radius: 8px; font-size: 13px; font-weight: 500; color: #52525B; cursor: pointer; transition: all 0.15s; }
+.course-chip:hover { border-color: #C7D6EE; background: #FAFAFA; }
+.course-chip.selected { border-color: #0D9488; background: #F0FDFA; color: #0F766E; }
+.course-chip input[type="checkbox"] { display: none; }
+.chip-icon { font-size: 16px; }
+.chip-check { width: 18px; height: 18px; border: 2px solid #D4D4D8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; transition: all 0.15s; flex-shrink: 0; }
+.course-chip.selected .chip-check { border-color: #0D9488; background: #0D9488; color: #fff; }
+
+/* Permissions box */
+.permissions-box { background: #F0FDFA; border: 1px solid #99F6E4; border-radius: 8px; padding: 14px 16px; margin-top: 4px; }
+.permissions-title { font-size: 12px; font-weight: 700; color: #0F766E; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.permissions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+.perm-item { font-size: 12px; color: #52525B; display: flex; align-items: center; gap: 6px; }
+.perm-check { color: #16A34A; font-weight: 700; font-size: 12px; }
+.perm-x { color: #DC2626; font-weight: 700; font-size: 12px; }
+
+.btn-secondary { padding: 10px 20px; background: #fff; color: #52525B; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; }
+.btn-secondary:hover { background: #F4F4F5; }
+.btn-create { padding: 10px 24px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-create:hover { background: #1E4A8A; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand"><div class="brand-name">Renukiran</div><div class="brand-sub">WELFARE FOUNDATION</div></div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DA;</span> Courses</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F464;</span> Users</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4C8;</span> Reports</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<header class="topbar">
+  <div class="topbar-bell">&#x1F514;<span class="bell-badge">3</span></div>
+  <div class="topbar-avatar">VA</div>
+</header>
+
+<div class="main" style="filter: blur(1px); opacity: 0.5; pointer-events: none;">
+  <div class="content">
+    <div class="page-header"><h1 class="page-title">Staff Accounts</h1></div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><div class="avatar-name"><div class="avatar-sm" style="background:#2B5EA7">VA</div><span style="font-weight:500;color:#18181B;">Vinay Adalath</span></div></td><td>vinay@rwf.org</td><td><span class="role-badge role-admin">Admin</span></td><td><span class="status-dot status-active">Active</span></td></tr>
+          <tr><td><div class="avatar-name"><div class="avatar-sm" style="background:#0D9488">SK</div><span style="font-weight:500;color:#18181B;">Suman Kumar</span></div></td><td>suman@rwf.org</td><td><span class="role-badge role-trainer">Trainer</span></td><td><span class="status-dot status-active">Active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add Trainer Modal -->
+<div class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-role-icon">&#x1F393;</div>
+        <div>
+          <div class="modal-title">Add Trainer</div>
+          <div class="modal-subtitle">Attendance recording & assessment entry</div>
+        </div>
+      </div>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="section-label">Account Details</div>
+
+      <div class="form-group">
+        <label class="form-label">Full Name <span class="req">*</span></label>
+        <input type="text" class="form-input" placeholder="e.g., Suman Kumar">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email <span class="req">*</span></label>
+          <input type="email" class="form-input" placeholder="e.g., suman@rwf.org">
+          <div class="form-hint">Used for login</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" placeholder="e.g., 9876543210">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password <span class="req">*</span></label>
+        <div class="password-wrapper">
+          <input type="text" class="form-input" value="tR4@nWx8Kp" id="pwdField" style="font-family: monospace; letter-spacing: 1px;">
+          <button class="password-toggle" title="Hide password">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <div class="password-gen">
+          <span style="font-size:11px;color:#71717A;">Auto-generated</span>
+          <button class="gen-btn">&#x21BB; Regenerate</button>
+        </div>
+        <div class="form-hint">Share securely. User must change on first login.</div>
+      </div>
+
+      <div style="border-top: 1px solid #E4E4E7; margin: 20px 0;"></div>
+      <div class="section-label">Course Assignment</div>
+
+      <div class="form-group">
+        <label class="form-label">Courses this trainer can teach <span class="req">*</span></label>
+        <div class="form-hint" style="margin-bottom:8px;">Select one or more courses. The trainer will only see batches for these courses.</div>
+        <div class="course-chips">
+          <label class="course-chip selected" onclick="this.classList.toggle('selected')">
+            <input type="checkbox" checked>
+            <span class="chip-check">&#x2713;</span>
+            <span class="chip-icon">&#x1F9F5;</span> Stitching
+          </label>
+          <label class="course-chip" onclick="this.classList.toggle('selected')">
+            <input type="checkbox">
+            <span class="chip-check">&#x2713;</span>
+            <span class="chip-icon">&#x1F4BB;</span> Computers
+          </label>
+          <label class="course-chip selected" onclick="this.classList.toggle('selected')">
+            <input type="checkbox" checked>
+            <span class="chip-check">&#x2713;</span>
+            <span class="chip-icon">&#x1F484;</span> Beauty
+          </label>
+          <label class="course-chip" onclick="this.classList.toggle('selected')">
+            <input type="checkbox">
+            <span class="chip-check">&#x2713;</span>
+            <span class="chip-icon">&#x1F45C;</span> Bag Making
+          </label>
+          <label class="course-chip" onclick="this.classList.toggle('selected')">
+            <input type="checkbox">
+            <span class="chip-check">&#x2713;</span>
+            <span class="chip-icon">&#x1F372;</span> Food Enterprise
+          </label>
+          <label class="course-chip" onclick="this.classList.toggle('selected')">
+            <input type="checkbox">
+            <span class="chip-check">&#x2713;</span>
+            <span class="chip-icon">&#x1F3A8;</span> Handicraft
+          </label>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #E4E4E7; margin: 20px 0;"></div>
+      <div class="section-label">Permissions for this role</div>
+
+      <div class="permissions-box">
+        <div class="permissions-title">
+          <span style="font-size:14px;">&#x1F393;</span> Trainer can:
+        </div>
+        <div class="permissions-grid">
+          <div class="perm-item"><span class="perm-check">&#x2713;</span> Record attendance</div>
+          <div class="perm-item"><span class="perm-check">&#x2713;</span> Enter assessment results</div>
+          <div class="perm-item"><span class="perm-check">&#x2713;</span> View assigned batch candidates</div>
+          <div class="perm-item"><span class="perm-check">&#x2713;</span> View in-app notifications</div>
+          <div class="perm-item"><span class="perm-x">&#x2717;</span> <span style="color:#A1A1AA;">Enter applications</span></div>
+          <div class="perm-item"><span class="perm-x">&#x2717;</span> <span style="color:#A1A1AA;">Assign batches</span></div>
+          <div class="perm-item"><span class="perm-x">&#x2717;</span> <span style="color:#A1A1AA;">Track placements</span></div>
+          <div class="perm-item"><span class="perm-x">&#x2717;</span> <span style="color:#A1A1AA;">Configure courses</span></div>
+          <div class="perm-item"><span class="perm-x">&#x2717;</span> <span style="color:#A1A1AA;">Manage users</span></div>
+          <div class="perm-item"><span class="perm-x">&#x2717;</span> <span style="color:#A1A1AA;">Access reports</span></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary">Cancel</button>
+      <button class="btn-create">Create Trainer</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

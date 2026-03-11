@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidates — RWF Learning Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    background: #FAFAFA;
+    color: #52525B;
+    line-height: 1.5;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #18181B;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-logo-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .sidebar-logo-title .green { color: #7CB518; }
+  .sidebar-logo-title .blue { color: #93B5E0; }
+
+  .sidebar-logo-sub {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #71717A;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 12px 0;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #A1A1AA;
+    text-decoration: none;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+  }
+
+  .nav-item:hover {
+    color: #FFFFFF;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .nav-item.active {
+    color: #FFFFFF;
+    background: rgba(43,94,167,0.2);
+    border-left-color: #2B5EA7;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sidebar-user {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #2B5EA7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .sidebar-user-info {
+    flex: 1;
+  }
+
+  .sidebar-user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .sidebar-user-role {
+    font-size: 11px;
+    color: #71717A;
+  }
+
+  /* Main Content */
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E4E4E7;
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #18181B;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: #2B5EA7;
+    color: #FFFFFF;
+  }
+
+  .btn-primary:hover {
+    background: #1E4A8A;
+  }
+
+  .content {
+    padding: 24px 32px;
+  }
+
+  /* Filters */
+  .filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .search-input {
+    flex: 1;
+    max-width: 320px;
+    padding: 9px 14px 9px 38px;
+    border: 1px solid #E4E4E7;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #18181B;
+    background: #FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%2371717A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 12px center no-repeat;
+    transition: border-color 0.15s;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: #2B5EA7;
+    box-shadow: 0 0 0 3px rgba(43,94,167,0.1);
+  }
+
+  .search-input::placeholder {
+    color: #A1A1AA;
+  }
+
+  .filter-select {
+    padding: 9px 32px 9px 14px;
+    border: 1px solid #E4E4E7;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #52525B;
+    background: #FFFFFF;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717A' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color 0.15s;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: #2B5EA7;
+    box-shadow: 0 0 0 3px rgba(43,94,167,0.1);
+  }
+
+  /* Table */
+  .table-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #71717A;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #E4E4E7;
+    background: #FAFAFA;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #F4F4F5;
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+
+  tbody tr:hover {
+    background: #EBF0F9;
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  tbody td {
+    padding: 14px 16px;
+    font-size: 14px;
+    color: #18181B;
+  }
+
+  .candidate-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #FFFFFF;
+    flex-shrink: 0;
+  }
+
+  .avatar-blue { background: #2B5EA7; }
+  .avatar-green { background: #7CB518; }
+  .avatar-teal { background: #0D9488; }
+  .avatar-purple { background: #7C3AED; }
+  .avatar-pink { background: #DB2777; }
+  .avatar-orange { background: #EA580C; }
+  .avatar-indigo { background: #4F46E5; }
+  .avatar-cyan { background: #0891B2; }
+
+  .candidate-name {
+    font-weight: 500;
+  }
+
+  .phone-text {
+    color: #71717A;
+    font-size: 13px;
+  }
+
+  .course-text {
+    font-size: 13px;
+    color: #52525B;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .badge-new {
+    background: #DBEAFE;
+    color: #1D4ED8;
+  }
+
+  .badge-under-review {
+    background: #FEF9C3;
+    color: #A16207;
+  }
+
+  .badge-selected {
+    background: #CFFAFE;
+    color: #0E7490;
+  }
+
+  .badge-assigned {
+    background: #DCFCE7;
+    color: #15803D;
+  }
+
+  .badge-training {
+    background: #CCFBF1;
+    color: #0F766E;
+  }
+
+  .badge-placed {
+    background: #D1FAE5;
+    color: #047857;
+  }
+
+  .badge-draft {
+    background: #F4F4F5;
+    color: #71717A;
+  }
+
+  .badge-not-placed {
+    background: #FEE2E2;
+    color: #DC2626;
+  }
+
+  .date-text {
+    color: #71717A;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-top: 1px solid #E4E4E7;
+  }
+
+  .pagination-info {
+    font-size: 13px;
+    color: #71717A;
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .page-btn {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #E4E4E7;
+    border-radius: 6px;
+    background: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #52525B;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .page-btn:hover {
+    background: #F4F4F5;
+    border-color: #D4D4D8;
+  }
+
+  .page-btn.active {
+    background: #2B5EA7;
+    border-color: #2B5EA7;
+    color: #FFFFFF;
+  }
+
+  .page-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .page-btn:disabled:hover {
+    background: #FFFFFF;
+    border-color: #E4E4E7;
+  }
+</style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-title"><span class="green">Renu</span><span class="blue">kiran</span></div>
+      <div class="sidebar-logo-sub">Learning Management</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="#">
+        <span class="nav-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+        Dashboard
+      </a>
+      <a class="nav-item active" href="#">
+        <span class="nav-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+        Applications
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg></span>
+        Batches
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></span>
+        Placements
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+        Notifications
+      </a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">RP</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Rekha Pandey</div>
+        <div class="sidebar-user-role">Operations Coordinator</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="topbar">
+      <h1 class="topbar-title">Candidates</h1>
+      <button class="btn btn-primary">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Application
+      </button>
+    </div>
+
+    <div class="content">
+      <!-- Filters -->
+      <div class="filters">
+        <input type="text" class="search-input" placeholder="Search by name or phone...">
+        <select class="filter-select">
+          <option>All Status</option>
+          <option>Draft</option>
+          <option>New</option>
+          <option>Under Review</option>
+          <option>Selected</option>
+          <option>Assigned</option>
+          <option>Training</option>
+          <option>Completed</option>
+          <option>Placed</option>
+          <option>Not Placed</option>
+        </select>
+        <select class="filter-select">
+          <option>All Courses</option>
+          <option>Stitching</option>
+          <option>Computers</option>
+          <option>Beauty</option>
+          <option>Handicraft</option>
+          <option>Food Enterprise</option>
+          <option>Bag Making</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Course</th>
+              <th>Status</th>
+              <th>Date Applied</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-blue">PS</div>
+                  <span class="candidate-name">Priya Sharma</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543210</td>
+              <td class="course-text">Stitching</td>
+              <td><span class="badge badge-new">New</span></td>
+              <td class="date-text">Mar 10, 2026</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-purple">KR</div>
+                  <span class="candidate-name">Kavita Rani</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543211</td>
+              <td class="course-text">Computers</td>
+              <td><span class="badge badge-under-review">Under Review</span></td>
+              <td class="date-text">Mar 9, 2026</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-green">SM</div>
+                  <span class="candidate-name">Sunita Mehra</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543212</td>
+              <td class="course-text">Beauty</td>
+              <td><span class="badge badge-assigned">Assigned</span></td>
+              <td class="date-text">Mar 8, 2026</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-teal">AK</div>
+                  <span class="candidate-name">Anita Kumari</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543213</td>
+              <td class="course-text">Stitching</td>
+              <td><span class="badge badge-training">Training</span></td>
+              <td class="date-text">Mar 7, 2026</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-pink">RP</div>
+                  <span class="candidate-name">Radha Patel</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543214</td>
+              <td class="course-text">Handicraft</td>
+              <td><span class="badge badge-placed">Placed</span></td>
+              <td class="date-text">Mar 5, 2026</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-orange">MD</div>
+                  <span class="candidate-name">Meena Devi</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543215</td>
+              <td class="course-text">Computers</td>
+              <td><span class="badge badge-draft">Draft</span></td>
+              <td class="date-text">Mar 10, 2026</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-cyan">LK</div>
+                  <span class="candidate-name">Lakshmi K.</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543216</td>
+              <td class="course-text">Food Enterprise</td>
+              <td><span class="badge badge-selected">Selected</span></td>
+              <td class="date-text">Mar 6, 2026</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="candidate-cell">
+                  <div class="avatar avatar-indigo">NB</div>
+                  <span class="candidate-name">Neha Banerjee</span>
+                </div>
+              </td>
+              <td class="phone-text">9876543217</td>
+              <td class="course-text">Bag Making</td>
+              <td><span class="badge badge-not-placed">Not Placed</span></td>
+              <td class="date-text">Mar 3, 2026</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <span class="pagination-info">Showing 1–8 of 142 candidates</span>
+          <div class="pagination-controls">
+            <button class="page-btn" disabled>
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">...</button>
+            <button class="page-btn">18</button>
+            <button class="page-btn">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

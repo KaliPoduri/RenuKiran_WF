@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Placement Detail — RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; max-width: 900px; }
+
+/* Back link + title */
+.back-link { display: inline-flex; align-items: center; gap: 6px; color: #2B5EA7; font-size: 14px; font-weight: 500; text-decoration: none; margin-bottom: 16px; cursor: pointer; }
+.back-link:hover { text-decoration: underline; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; margin-bottom: 24px; }
+
+/* Header card */
+.detail-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 32px; }
+.detail-grid { display: grid; grid-template-columns: repeat(5, auto); gap: 32px; align-items: start; }
+.detail-item {}
+.detail-label { font-size: 11px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.detail-value { font-size: 16px; font-weight: 600; color: #18181B; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-green { background: #DCFCE7; color: #16A34A; }
+
+/* Timeline section */
+.section-title { font-size: 18px; font-weight: 700; color: #18181B; margin-bottom: 20px; }
+.timeline { position: relative; padding-left: 32px; margin-bottom: 40px; }
+.timeline::before { content: ''; position: absolute; left: 11px; top: 4px; bottom: 4px; width: 2px; background: #E4E4E7; }
+.timeline-item { position: relative; margin-bottom: 32px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-dot { position: absolute; left: -32px; top: 2px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 1; }
+.timeline-dot.completed { background: #16A34A; color: #fff; }
+.timeline-dot.upcoming { background: #fff; border: 2px solid #E4E4E7; color: #71717A; }
+.timeline-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.timeline-title { font-size: 15px; font-weight: 600; color: #18181B; }
+.timeline-date { font-size: 13px; color: #71717A; }
+.timeline-status { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+.timeline-status.completed { background: #DCFCE7; color: #16A34A; }
+.timeline-status.upcoming { background: #F4F4F5; color: #71717A; }
+.timeline-body { background: #FAFAFA; border: 1px solid #E4E4E7; border-radius: 8px; padding: 14px 16px; margin-top: 8px; }
+.timeline-body p { font-size: 13px; color: #52525B; margin-bottom: 4px; }
+.timeline-body p:last-child { margin-bottom: 0; }
+.timeline-body strong { color: #18181B; font-weight: 600; }
+.timeline-upcoming-text { font-size: 13px; color: #71717A; font-style: italic; margin-top: 4px; }
+
+/* Candidate info */
+.candidate-info-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
+.candidate-info-grid { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; }
+.info-pair { font-size: 14px; color: #52525B; }
+.info-pair strong { color: #18181B; font-weight: 600; }
+.link { color: #2B5EA7; font-weight: 500; text-decoration: none; cursor: pointer; }
+.link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DD;</span> Applications</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F4BC;</span> Placements</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">&#x1F514;<span class="bell-badge">4</span></div>
+  <div class="topbar-avatar">VA</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <a class="back-link" href="#">&#x2190; Back to Placements</a>
+    <h1 class="page-title">Priya Sharma &mdash; Placement Record</h1>
+
+    <!-- Header card -->
+    <div class="detail-card">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="detail-label">Employer</div>
+          <div class="detail-value">ABC Textiles Ltd</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Role</div>
+          <div class="detail-value">Tailor</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Salary</div>
+          <div class="detail-value">&#x20B9;8,000/month</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Placed</div>
+          <div class="detail-value">Feb 15, 2026</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Status</div>
+          <div><span class="badge badge-green">Active</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Follow-up Timeline -->
+    <h2 class="section-title">Follow-up Timeline</h2>
+    <div class="timeline">
+      <!-- 1 Month -->
+      <div class="timeline-item">
+        <div class="timeline-dot completed">&#x2713;</div>
+        <div class="timeline-header">
+          <span class="timeline-title">1 Month</span>
+          <span class="timeline-date">Mar 15, 2026</span>
+          <span class="timeline-status completed">Completed</span>
+        </div>
+        <div class="timeline-body">
+          <p><strong>Status:</strong> Active</p>
+          <p><strong>Salary:</strong> &#x20B9;8,000</p>
+          <p><strong>Note:</strong> Doing well, learning new patterns</p>
+        </div>
+      </div>
+
+      <!-- 3 Months -->
+      <div class="timeline-item">
+        <div class="timeline-dot upcoming">&#x25CB;</div>
+        <div class="timeline-header">
+          <span class="timeline-title">3 Months</span>
+          <span class="timeline-date">May 15, 2026</span>
+          <span class="timeline-status upcoming">Upcoming</span>
+        </div>
+        <div class="timeline-upcoming-text">Due in 65 days</div>
+      </div>
+
+      <!-- 6 Months -->
+      <div class="timeline-item">
+        <div class="timeline-dot upcoming">&#x25CB;</div>
+        <div class="timeline-header">
+          <span class="timeline-title">6 Months</span>
+          <span class="timeline-date">Aug 15, 2026</span>
+          <span class="timeline-status upcoming">Upcoming</span>
+        </div>
+        <div class="timeline-upcoming-text">Due in 157 days</div>
+      </div>
+    </div>
+
+    <!-- Candidate Info -->
+    <h2 class="section-title">Candidate Info</h2>
+    <div class="candidate-info-card">
+      <div class="candidate-info-grid">
+        <div class="info-pair"><strong>Course:</strong> Stitching Basic</div>
+        <div class="info-pair"><strong>Batch:</strong> B1</div>
+        <div class="info-pair"><strong>Assessment:</strong> 86.1% (Pass)</div>
+        <a class="link" href="#">View Full Profile &rarr;</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

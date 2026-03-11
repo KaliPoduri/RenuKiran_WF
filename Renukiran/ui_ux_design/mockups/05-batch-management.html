@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Batches - RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+
+/* Page header */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; }
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: #1E4A8A; }
+
+/* Toolbar */
+.toolbar { display: flex; gap: 12px; margin-bottom: 20px; }
+.search-input { flex: 1; max-width: 320px; padding: 9px 14px 9px 36px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #18181B; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2371717A' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") 12px center no-repeat; }
+.search-input::placeholder { color: #71717A; }
+.search-input:focus { outline: none; border-color: #2B5EA7; box-shadow: 0 0 0 3px rgba(43,94,167,0.12); }
+.filter-select { padding: 9px 32px 9px 12px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #52525B; background: #fff; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717A' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6.5 6.5 6.5-6.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.filter-select:focus { outline: none; border-color: #2B5EA7; }
+
+/* Table */
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F4F4F5; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; }
+td { padding: 14px 16px; border-bottom: 1px solid #E4E4E7; font-size: 14px; color: #52525B; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #FAFAFA; }
+
+/* Capacity bar */
+.capacity-wrap { display: flex; align-items: center; gap: 10px; }
+.capacity-bar { width: 80px; height: 6px; background: #E4E4E7; border-radius: 3px; overflow: hidden; }
+.capacity-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.capacity-fill.green { background: #16A34A; }
+.capacity-fill.yellow { background: #EAB308; }
+.capacity-fill.red { background: #DC2626; }
+.capacity-text { font-size: 13px; color: #52525B; font-weight: 500; }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-green { background: #DCFCE7; color: #16A34A; }
+.badge-blue { background: #DBEAFE; color: #2563EB; }
+.badge-gray { background: #F4F4F5; color: #71717A; }
+
+/* Pagination */
+.pagination { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-top: 1px solid #E4E4E7; }
+.pagination-info { font-size: 13px; color: #71717A; }
+.pagination-controls { display: flex; gap: 4px; }
+.page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #E4E4E7; border-radius: 6px; background: #fff; color: #52525B; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.page-btn:hover { background: #F4F4F5; border-color: #D4D4D8; }
+.page-btn.active { background: #2B5EA7; color: #fff; border-color: #2B5EA7; }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DA;</span> Courses</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F464;</span> Users</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4C8;</span> Reports</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">
+    &#x1F514;
+    <span class="bell-badge">3</span>
+  </div>
+  <div class="topbar-avatar">VA</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <div class="page-header">
+      <h1 class="page-title">Batches</h1>
+      <button class="btn-primary">+ Create Batch</button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" class="search-input" placeholder="Search batches...">
+      <select class="filter-select">
+        <option>Course: All</option>
+        <option>Stitching Basic</option>
+        <option>Computer Fund.</option>
+        <option>Beauty Basic</option>
+        <option>Bag Making</option>
+      </select>
+      <select class="filter-select">
+        <option>Status: All</option>
+        <option>Ongoing</option>
+        <option>Upcoming</option>
+        <option>Completed</option>
+      </select>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Batch ID</th>
+            <th>Course</th>
+            <th>Trainer</th>
+            <th>Dates</th>
+            <th>Capacity</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600;color:#18181B;">B1</td>
+            <td>Stitching Basic</td>
+            <td>Suman K.</td>
+            <td>Mar &ndash; Jun 2026</td>
+            <td>
+              <div class="capacity-wrap">
+                <div class="capacity-bar"><div class="capacity-fill yellow" style="width:90%"></div></div>
+                <span class="capacity-text">18/20</span>
+              </div>
+            </td>
+            <td><span class="badge badge-green">Ongoing</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:#18181B;">B2</td>
+            <td>Computer Fund.</td>
+            <td>Raj P.</td>
+            <td>Mar &ndash; May 2026</td>
+            <td>
+              <div class="capacity-wrap">
+                <div class="capacity-bar"><div class="capacity-fill red" style="width:95%"></div></div>
+                <span class="capacity-text">19/20</span>
+              </div>
+            </td>
+            <td><span class="badge badge-green">Ongoing</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:#18181B;">B3</td>
+            <td>Beauty Basic</td>
+            <td>Asha M.</td>
+            <td>Apr &ndash; Jul 2026</td>
+            <td>
+              <div class="capacity-wrap">
+                <div class="capacity-bar"><div class="capacity-fill green" style="width:0%"></div></div>
+                <span class="capacity-text">0/20</span>
+              </div>
+            </td>
+            <td><span class="badge badge-blue">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:#18181B;">B4</td>
+            <td>Stitching Basic</td>
+            <td>Suman K.</td>
+            <td>Jan &ndash; Mar 2026</td>
+            <td>
+              <div class="capacity-wrap">
+                <div class="capacity-bar"><div class="capacity-fill green" style="width:100%"></div></div>
+                <span class="capacity-text">20/20</span>
+              </div>
+            </td>
+            <td><span class="badge badge-gray">Completed</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:600;color:#18181B;">B5</td>
+            <td>Bag Making</td>
+            <td>Priya T.</td>
+            <td>May &ndash; Aug 2026</td>
+            <td>
+              <div class="capacity-wrap">
+                <div class="capacity-bar"><div class="capacity-fill green" style="width:25%"></div></div>
+                <span class="capacity-text">5/20</span>
+              </div>
+            </td>
+            <td><span class="badge badge-blue">Upcoming</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <span class="pagination-info">Showing 1&ndash;5 of 12</span>
+        <div class="pagination-controls">
+          <button class="page-btn" disabled>&laquo;</button>
+          <button class="page-btn" disabled>&lsaquo;</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">&rsaquo;</button>
+          <button class="page-btn">&raquo;</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

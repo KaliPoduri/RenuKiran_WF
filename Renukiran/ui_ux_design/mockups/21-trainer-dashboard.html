@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Trainer Dashboard — RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+
+/* Welcome */
+.welcome { font-size: 24px; font-weight: 700; color: #18181B; margin-bottom: 24px; }
+
+/* Section title */
+.section-title { font-size: 18px; font-weight: 700; color: #18181B; margin-bottom: 16px; }
+
+/* Batch cards */
+.batch-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 36px; }
+.batch-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.batch-card-title { font-size: 17px; font-weight: 700; color: #18181B; }
+.batch-meta { display: flex; flex-wrap: wrap; gap: 20px; }
+.meta-item { font-size: 13px; color: #71717A; }
+.meta-item strong { color: #52525B; font-weight: 600; }
+
+/* Progress bar */
+.progress-row { display: flex; align-items: center; gap: 12px; }
+.progress-label { font-size: 13px; color: #71717A; min-width: 100px; }
+.progress-bar { flex: 1; height: 8px; background: #E4E4E7; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; }
+.progress-fill.green { background: #16A34A; }
+.progress-fill.blue { background: #2B5EA7; }
+.progress-value { font-size: 13px; font-weight: 600; color: #18181B; min-width: 40px; }
+
+/* Attendance status text */
+.attendance-status { font-size: 13px; font-weight: 600; }
+.attendance-status.not-marked { color: #CA8A04; }
+.attendance-status.marked { color: #16A34A; }
+
+/* Card actions */
+.card-actions { display: flex; gap: 10px; margin-top: 4px; }
+.btn-green { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: #7CB518; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+.btn-green:hover { background: #6a9e14; }
+.btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: #fff; color: #52525B; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.btn-outline:hover { background: #F4F4F5; border-color: #D4D4D8; }
+
+/* Alerts */
+.alert-cards { display: flex; flex-direction: column; gap: 10px; }
+.alert-card { background: #FEF9C3; border: 1px solid #FDE68A; border-radius: 8px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+.alert-icon { font-size: 20px; color: #CA8A04; }
+.alert-text { font-size: 14px; color: #18181B; }
+.alert-text strong { font-weight: 600; }
+.alert-pct { font-size: 15px; font-weight: 700; color: #CA8A04; margin-left: auto; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DA;</span> My Batches</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">&#x1F514;<span class="bell-badge">2</span></div>
+  <div class="topbar-avatar">SK</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <h1 class="welcome">Welcome, Suman!</h1>
+
+    <h2 class="section-title">My Active Batches</h2>
+    <div class="batch-cards">
+
+      <!-- Batch 1 -->
+      <div class="batch-card">
+        <div class="batch-card-title">Stitching Basic &mdash; Batch 1</div>
+        <div class="batch-meta">
+          <span class="meta-item"><strong>18</strong> candidates</span>
+          <span class="meta-item">Mar 1 &ndash; Jun 30, 2026</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Class Progress</span>
+          <div class="progress-bar"><div class="progress-fill blue" style="width: 31.25%;"></div></div>
+          <span class="progress-value">15 / 48</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Avg Attendance</span>
+          <div class="progress-bar"><div class="progress-fill green" style="width: 84%;"></div></div>
+          <span class="progress-value">84%</span>
+        </div>
+        <div class="attendance-status not-marked">Today's attendance: Not yet marked</div>
+        <div class="card-actions">
+          <button class="btn-green">Mark Attendance</button>
+          <button class="btn-outline">View Batch</button>
+        </div>
+      </div>
+
+      <!-- Batch 2 -->
+      <div class="batch-card">
+        <div class="batch-card-title">Computer Fund. &mdash; Batch 2</div>
+        <div class="batch-meta">
+          <span class="meta-item"><strong>19</strong> candidates</span>
+          <span class="meta-item">Mar 1 &ndash; May 31, 2026</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Class Progress</span>
+          <div class="progress-bar"><div class="progress-fill blue" style="width: 55%;"></div></div>
+          <span class="progress-value">22 / 40</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Avg Attendance</span>
+          <div class="progress-bar"><div class="progress-fill green" style="width: 91%;"></div></div>
+          <span class="progress-value">91%</span>
+        </div>
+        <div class="attendance-status marked">Today's attendance: &#x2713; Marked</div>
+        <div class="card-actions">
+          <button class="btn-outline">View Batch</button>
+        </div>
+      </div>
+
+    </div>
+
+    <h2 class="section-title">Low Attendance Alerts</h2>
+    <div class="alert-cards">
+      <div class="alert-card">
+        <span class="alert-icon">&#x26A0;</span>
+        <span class="alert-text"><strong>Kavita R.</strong> &mdash; Stitching B1</span>
+        <span class="alert-pct">68%</span>
+      </div>
+      <div class="alert-card">
+        <span class="alert-icon">&#x26A0;</span>
+        <span class="alert-text"><strong>Anita K.</strong> &mdash; Stitching B1</span>
+        <span class="alert-pct">72%</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Batch Detail - RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+
+/* Back + Title */
+.page-back { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #2B5EA7; font-weight: 500; cursor: pointer; margin-bottom: 16px; text-decoration: none; }
+.page-back:hover { color: #1E4A8A; }
+.page-back-arrow { font-size: 18px; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; margin-bottom: 20px; }
+
+/* Header card */
+.header-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px 24px; margin-bottom: 24px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+.header-item { display: flex; flex-direction: column; gap: 4px; }
+.header-label { font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; }
+.header-value { font-size: 15px; font-weight: 600; color: #18181B; }
+.capacity-inline { display: flex; align-items: center; gap: 10px; }
+.capacity-bar { width: 100px; height: 6px; background: #E4E4E7; border-radius: 3px; overflow: hidden; }
+.capacity-fill { height: 100%; border-radius: 3px; background: #EAB308; }
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-green { background: #DCFCE7; color: #16A34A; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid #E4E4E7; margin-bottom: 20px; }
+.tab { padding: 10px 20px; font-size: 14px; font-weight: 600; color: #71717A; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+.tab:hover { color: #18181B; }
+.tab.active { color: #2B5EA7; border-bottom-color: #2B5EA7; }
+
+/* Action row */
+.action-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: #1E4A8A; }
+.search-input { width: 280px; padding: 9px 14px 9px 36px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #18181B; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2371717A' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") 12px center no-repeat; }
+.search-input::placeholder { color: #71717A; }
+.search-input:focus { outline: none; border-color: #2B5EA7; box-shadow: 0 0 0 3px rgba(43,94,167,0.12); }
+
+/* Table */
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F4F4F5; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; }
+td { padding: 14px 16px; border-bottom: 1px solid #E4E4E7; font-size: 14px; color: #52525B; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #FAFAFA; }
+
+/* Avatar */
+.avatar-name { display: flex; align-items: center; gap: 10px; }
+.avatar-sm { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; flex-shrink: 0; }
+.avatar-blue { background: #2B5EA7; }
+.avatar-green { background: #16A34A; }
+.avatar-purple { background: #7C3AED; }
+.avatar-teal { background: #0D9488; }
+.avatar-amber { background: #D97706; }
+
+/* Attendance */
+.att-good { color: #16A34A; font-weight: 600; }
+.att-warn { color: #EAB308; font-weight: 600; }
+.att-bad { color: #DC2626; font-weight: 600; }
+.att-label { font-size: 11px; font-weight: 500; margin-left: 4px; padding: 2px 6px; border-radius: 4px; }
+.att-label-warn { background: #FEF3C7; color: #92400E; }
+.att-label-bad { background: #FEE2E2; color: #991B1B; }
+
+/* Checkbox */
+.chk { width: 16px; height: 16px; accent-color: #2B5EA7; cursor: pointer; }
+
+/* Bottom action */
+.bottom-bar { padding: 14px 16px; border-top: 1px solid #E4E4E7; display: flex; align-items: center; gap: 12px; }
+.btn-danger-outline { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #fff; color: #DC2626; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: not-allowed; opacity: 0.5; font-family: inherit; transition: all 0.15s; }
+.btn-danger-outline.enabled { cursor: pointer; opacity: 1; border-color: #DC2626; }
+.btn-danger-outline.enabled:hover { background: #FEE2E2; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DA;</span> Courses</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F464;</span> Users</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4C8;</span> Reports</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">
+    &#x1F514;
+    <span class="bell-badge">3</span>
+  </div>
+  <div class="topbar-avatar">VA</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <a class="page-back" href="#">
+      <span class="page-back-arrow">&larr;</span> Back to Batches
+    </a>
+    <h1 class="page-title">Stitching Basic &mdash; Batch 1</h1>
+
+    <!-- Header card -->
+    <div class="header-card">
+      <div class="header-item">
+        <span class="header-label">Trainer</span>
+        <span class="header-value">Suman K.</span>
+      </div>
+      <div class="header-item">
+        <span class="header-label">Period</span>
+        <span class="header-value">Mar 1 &ndash; Jun 30, 2026</span>
+      </div>
+      <div class="header-item">
+        <span class="header-label">Capacity</span>
+        <div class="capacity-inline">
+          <div class="capacity-bar"><div class="capacity-fill" style="width:90%"></div></div>
+          <span class="header-value">18/20</span>
+        </div>
+      </div>
+      <div class="header-item">
+        <span class="header-label">Status</span>
+        <span class="badge badge-green">Ongoing</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active">Candidates</div>
+      <div class="tab">Attendance</div>
+      <div class="tab">Assessments</div>
+    </div>
+
+    <!-- Action row -->
+    <div class="action-row">
+      <button class="btn-primary">+ Assign Candidates</button>
+      <input type="text" class="search-input" placeholder="Search candidates...">
+    </div>
+
+    <!-- Candidates table -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px"><input type="checkbox" class="chk"></th>
+            <th style="width:40px">#</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Attendance %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" class="chk"></td>
+            <td style="color:#71717A;">1</td>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm avatar-blue">MK</div>
+                <span style="font-weight:500;color:#18181B;">Meena Kumari</span>
+              </div>
+            </td>
+            <td>+91 98765 43210</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><span class="att-good">93%</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="chk"></td>
+            <td style="color:#71717A;">2</td>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm avatar-purple">RS</div>
+                <span style="font-weight:500;color:#18181B;">Radha Sharma</span>
+              </div>
+            </td>
+            <td>+91 98765 43211</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><span class="att-bad">68%<span class="att-label att-label-bad">Below threshold</span></span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="chk"></td>
+            <td style="color:#71717A;">3</td>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm avatar-green">SB</div>
+                <span style="font-weight:500;color:#18181B;">Sunita Bai</span>
+              </div>
+            </td>
+            <td>+91 98765 43212</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><span class="att-good">85%</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="chk"></td>
+            <td style="color:#71717A;">4</td>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm avatar-amber">PD</div>
+                <span style="font-weight:500;color:#18181B;">Parveen Devi</span>
+              </div>
+            </td>
+            <td>+91 98765 43213</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><span class="att-warn">72%<span class="att-label att-label-warn">At risk</span></span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="chk"></td>
+            <td style="color:#71717A;">5</td>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm avatar-teal">KJ</div>
+                <span style="font-weight:500;color:#18181B;">Kavita Joshi</span>
+              </div>
+            </td>
+            <td>+91 98765 43214</td>
+            <td><span class="badge badge-green">Active</span></td>
+            <td><span class="att-good">90%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="bottom-bar">
+        <button class="btn-danger-outline">Remove Selected</button>
+        <span style="font-size:12px;color:#71717A;">Select candidates to enable actions</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

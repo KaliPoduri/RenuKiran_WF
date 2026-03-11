@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Assessment Entry — RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+
+/* Page header */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid #E4E4E7; margin-bottom: 20px; }
+.tab { padding: 10px 20px; font-size: 14px; font-weight: 500; color: #71717A; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; text-decoration: none; }
+.tab:hover { color: #18181B; }
+.tab.active { color: #2B5EA7; border-bottom-color: #2B5EA7; font-weight: 600; }
+
+/* Info bar */
+.info-bar { background: #EBF0F9; border: 1px solid #C5D5ED; border-radius: 8px; padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #2B5EA7; font-weight: 500; }
+.info-bar .info-icon { font-size: 16px; }
+
+/* Table */
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F4F4F5; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; }
+td { padding: 14px 16px; border-bottom: 1px solid #E4E4E7; font-size: 14px; color: #52525B; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #FAFAFA; }
+th.center, td.center { text-align: center; }
+
+/* Score input */
+.score-input { width: 72px; padding: 7px 10px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #18181B; text-align: center; transition: border-color 0.15s; }
+.score-input:focus { outline: none; border-color: #2B5EA7; box-shadow: 0 0 0 3px rgba(43,94,167,0.12); }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-green { background: #DCFCE7; color: #16A34A; }
+.badge-red { background: #FEE2E2; color: #DC2626; }
+
+/* Final % */
+.final-score { font-weight: 700; font-size: 15px; color: #18181B; }
+
+/* Expandable remarks */
+.remarks-row td { background: #FAFAFA; padding: 0; }
+.remarks-content { padding: 12px 16px 16px 16px; }
+.remarks-label { font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.remarks-textarea { width: 100%; max-width: 500px; padding: 8px 12px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 13px; font-family: inherit; color: #52525B; resize: vertical; min-height: 60px; transition: border-color 0.15s; }
+.remarks-textarea:focus { outline: none; border-color: #2B5EA7; box-shadow: 0 0 0 3px rgba(43,94,167,0.12); }
+
+/* Expand toggle */
+.expand-btn { background: none; border: none; color: #2B5EA7; cursor: pointer; font-size: 13px; font-weight: 500; font-family: inherit; padding: 2px 0; }
+.expand-btn:hover { text-decoration: underline; }
+
+/* Name cell */
+.candidate-name { font-weight: 500; color: #18181B; }
+
+/* Summary bar */
+.summary-bar { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.summary-stats { display: flex; gap: 24px; }
+.summary-stat { font-size: 14px; font-weight: 500; color: #52525B; }
+.summary-stat strong { font-weight: 700; }
+.summary-stat .green { color: #16A34A; }
+.summary-stat .red { color: #DC2626; }
+
+/* Buttons */
+.actions { display: flex; gap: 12px; }
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: #1E4A8A; }
+.btn-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #fff; color: #52525B; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.btn-secondary:hover { background: #F4F4F5; border-color: #D4D4D8; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F4DA;</span> My Batches</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">&#x1F514;<span class="bell-badge">2</span></div>
+  <div class="topbar-avatar">SK</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <div class="page-header">
+      <h1 class="page-title">Stitching Basic — Batch 1</h1>
+    </div>
+
+    <div class="tabs">
+      <a class="tab" href="#">Candidates</a>
+      <a class="tab" href="#">Attendance</a>
+      <a class="tab active" href="#">Assessments</a>
+    </div>
+
+    <div class="info-bar">
+      <span class="info-icon">&#x2139;&#xFE0F;</span>
+      Course Weights: MCQ (30%) &nbsp;|&nbsp; Practical (50%) &nbsp;|&nbsp; Case Study (20%) &nbsp;|&nbsp; Pass Threshold: 50%
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 30px;">#</th>
+            <th>Name</th>
+            <th class="center">MCQ / 100</th>
+            <th class="center">Practical / 100</th>
+            <th class="center">Case Study / 100</th>
+            <th class="center">Final %</th>
+            <th class="center">Result</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><span class="candidate-name">Priya S.</span></td>
+            <td class="center"><input type="number" class="score-input" value="85" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="90" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="78" min="0" max="100"></td>
+            <td class="center"><span class="final-score">86.1%</span></td>
+            <td class="center"><span class="badge badge-green">&#x2713; Pass</span></td>
+            <td><button class="expand-btn">Remarks</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><span class="candidate-name">Kavita R.</span></td>
+            <td class="center"><input type="number" class="score-input" value="60" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="45" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="50" min="0" max="100"></td>
+            <td class="center"><span class="final-score">50.0%</span></td>
+            <td class="center"><span class="badge badge-green">&#x2713; Pass</span></td>
+            <td><button class="expand-btn">Remarks</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><span class="candidate-name">Sunita M.</span></td>
+            <td class="center"><input type="number" class="score-input" value="70" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="80" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="65" min="0" max="100"></td>
+            <td class="center"><span class="final-score">74.0%</span></td>
+            <td class="center"><span class="badge badge-green">&#x2713; Pass</span></td>
+            <td><button class="expand-btn">Remarks</button></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><span class="candidate-name">Anita K.</span></td>
+            <td class="center"><input type="number" class="score-input" value="40" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="35" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="30" min="0" max="100"></td>
+            <td class="center"><span class="final-score">35.0%</span></td>
+            <td class="center"><span class="badge badge-red">&#x2717; Fail</span></td>
+            <td><button class="expand-btn">Remarks &#x25BC;</button></td>
+          </tr>
+          <tr class="remarks-row">
+            <td colspan="8">
+              <div class="remarks-content">
+                <div class="remarks-label">Remarks for Anita K.</div>
+                <textarea class="remarks-textarea">Needs more practice with machine operation.</textarea>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><span class="candidate-name">Radha P.</span></td>
+            <td class="center"><input type="number" class="score-input" value="75" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="85" min="0" max="100"></td>
+            <td class="center"><input type="number" class="score-input" value="70" min="0" max="100"></td>
+            <td class="center"><span class="final-score">79.0%</span></td>
+            <td class="center"><span class="badge badge-green">&#x2713; Pass</span></td>
+            <td><button class="expand-btn">Remarks</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-stats">
+        <span class="summary-stat"><strong class="green">4</strong> Pass</span>
+        <span class="summary-stat"><strong class="red">1</strong> Fail</span>
+        <span class="summary-stat">Pass Rate: <strong>80%</strong></span>
+      </div>
+      <div class="actions">
+        <button class="btn-secondary">Save Assessments</button>
+        <button class="btn-primary">Publish Results</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

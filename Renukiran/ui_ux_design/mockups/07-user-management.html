@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Staff Accounts - RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+
+/* Page header */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; }
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: #1E4A8A; }
+
+/* Toolbar */
+.toolbar { display: flex; gap: 12px; margin-bottom: 20px; }
+.search-input { flex: 1; max-width: 320px; padding: 9px 14px 9px 36px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #18181B; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2371717A' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") 12px center no-repeat; }
+.search-input::placeholder { color: #71717A; }
+.search-input:focus { outline: none; border-color: #2B5EA7; box-shadow: 0 0 0 3px rgba(43,94,167,0.12); }
+.filter-select { padding: 9px 32px 9px 12px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #52525B; background: #fff; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717A' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6.5 6.5 6.5-6.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.filter-select:focus { outline: none; border-color: #2B5EA7; }
+
+/* Table */
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F4F4F5; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; }
+td { padding: 14px 16px; border-bottom: 1px solid #E4E4E7; font-size: 14px; color: #52525B; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #FAFAFA; }
+
+/* Avatar */
+.avatar-name { display: flex; align-items: center; gap: 10px; }
+.avatar-sm { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; flex-shrink: 0; }
+.av-1 { background: #2B5EA7; }
+.av-2 { background: #0D9488; }
+.av-3 { background: #7C3AED; }
+.av-4 { background: #D97706; }
+.av-5 { background: #6366F1; }
+
+/* Role badges */
+.role-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.role-admin { background: #DBEAFE; color: #1D4ED8; }
+.role-trainer { background: #CCFBF1; color: #0F766E; }
+.role-oc { background: #EDE9FE; color: #6D28D9; }
+
+/* Status */
+.status-dot { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+.status-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.status-active { color: #16A34A; }
+.status-active::before { background: #16A34A; }
+.status-inactive { color: #71717A; }
+.status-inactive::before { background: #A1A1AA; }
+
+/* Action icons */
+.action-icons { display: flex; gap: 8px; }
+.action-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #E4E4E7; border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px; color: #52525B; transition: all 0.15s; }
+.action-btn:hover { background: #F4F4F5; border-color: #D4D4D8; }
+.action-btn.deactivate:hover { background: #FEE2E2; border-color: #FECACA; color: #DC2626; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DA;</span> Courses</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F464;</span> Users</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4C8;</span> Reports</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">
+    &#x1F514;
+    <span class="bell-badge">3</span>
+  </div>
+  <div class="topbar-avatar">VA</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <div class="page-header">
+      <h1 class="page-title">Staff Accounts</h1>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-primary" style="background:#6D28D9;" onmouseover="this.style.background='#5B21B6'" onmouseout="this.style.background='#6D28D9'">+ Add Office Coordinator</button>
+        <button class="btn-primary" style="background:#0D9488;" onmouseover="this.style.background='#0F766E'" onmouseout="this.style.background='#0D9488'">+ Add Trainer</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" class="search-input" placeholder="Search staff...">
+      <select class="filter-select">
+        <option>Role: All</option>
+        <option>Admin</option>
+        <option>Trainer</option>
+        <option>Office Coord.</option>
+      </select>
+      <select class="filter-select">
+        <option>Status: All</option>
+        <option>Active</option>
+        <option>Inactive</option>
+      </select>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th style="width:100px">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm av-1">VA</div>
+                <span style="font-weight:500;color:#18181B;">Vinay Adalath</span>
+              </div>
+            </td>
+            <td>vinay@rwf.org</td>
+            <td><span class="role-badge role-admin">Admin</span></td>
+            <td><span class="status-dot status-active">Active</span></td>
+            <td>
+              <div class="action-icons">
+                <button class="action-btn" title="Edit">&#9998;</button>
+                <button class="action-btn deactivate" title="Deactivate">&#x23F8;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm av-2">SK</div>
+                <span style="font-weight:500;color:#18181B;">Suman Kumar</span>
+              </div>
+            </td>
+            <td>suman@rwf.org</td>
+            <td><span class="role-badge role-trainer">Trainer</span></td>
+            <td><span class="status-dot status-active">Active</span></td>
+            <td>
+              <div class="action-icons">
+                <button class="action-btn" title="Edit">&#9998;</button>
+                <button class="action-btn deactivate" title="Deactivate">&#x23F8;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm av-3">RP</div>
+                <span style="font-weight:500;color:#18181B;">Rekha Patel</span>
+              </div>
+            </td>
+            <td>rekha@rwf.org</td>
+            <td><span class="role-badge role-oc">Office Coord.</span></td>
+            <td><span class="status-dot status-active">Active</span></td>
+            <td>
+              <div class="action-icons">
+                <button class="action-btn" title="Edit">&#9998;</button>
+                <button class="action-btn deactivate" title="Deactivate">&#x23F8;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm av-4">AM</div>
+                <span style="font-weight:500;color:#18181B;">Asha Mehra</span>
+              </div>
+            </td>
+            <td>asha@rwf.org</td>
+            <td><span class="role-badge role-trainer">Trainer</span></td>
+            <td><span class="status-dot status-active">Active</span></td>
+            <td>
+              <div class="action-icons">
+                <button class="action-btn" title="Edit">&#9998;</button>
+                <button class="action-btn deactivate" title="Deactivate">&#x23F8;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="avatar-name">
+                <div class="avatar-sm av-5">PK</div>
+                <span style="font-weight:500;color:#18181B;">Pradeep K.</span>
+              </div>
+            </td>
+            <td>pradeep@rwf.org</td>
+            <td><span class="role-badge role-oc">Office Coord.</span></td>
+            <td><span class="status-dot status-inactive">Inactive</span></td>
+            <td>
+              <div class="action-icons">
+                <button class="action-btn" title="Edit">&#9998;</button>
+                <button class="action-btn deactivate" title="Activate">&#x25B6;</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

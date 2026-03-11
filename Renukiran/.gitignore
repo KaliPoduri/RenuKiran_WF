@@ -1,0 +1,4 @@
+node_modules/
+CLAUDE.md
+generate-design-doc.js
+package-lock.json

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Placement Tracking — RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+
+/* Page header */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; }
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: #1E4A8A; }
+
+/* Stat cards */
+.stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; }
+.stat-label { font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.stat-value { font-size: 28px; font-weight: 700; color: #18181B; }
+.stat-value.green { color: #16A34A; }
+.stat-value.red { color: #DC2626; }
+.stat-value.yellow { color: #CA8A04; }
+
+/* Toolbar */
+.toolbar { display: flex; gap: 12px; margin-bottom: 20px; }
+.search-input { flex: 1; max-width: 320px; padding: 9px 14px 9px 36px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #18181B; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2371717A' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") 12px center no-repeat; }
+.search-input::placeholder { color: #71717A; }
+.search-input:focus { outline: none; border-color: #2B5EA7; box-shadow: 0 0 0 3px rgba(43,94,167,0.12); }
+.filter-select { padding: 9px 32px 9px 12px; border: 1px solid #E4E4E7; border-radius: 6px; font-size: 14px; font-family: inherit; color: #52525B; background: #fff; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717A' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6.5 6.5 6.5-6.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.filter-select:focus { outline: none; border-color: #2B5EA7; }
+
+/* Table */
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 32px; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F4F4F5; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; }
+td { padding: 14px 16px; border-bottom: 1px solid #E4E4E7; font-size: 14px; color: #52525B; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #FAFAFA; }
+th.center, td.center { text-align: center; }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-green { background: #DCFCE7; color: #16A34A; }
+.badge-red { background: #FEE2E2; color: #DC2626; }
+.badge-gray { background: #F4F4F5; color: #71717A; }
+
+.candidate-name { font-weight: 500; color: #18181B; }
+.salary { font-weight: 600; color: #18181B; }
+
+/* Follow-ups section */
+.section-title { font-size: 18px; font-weight: 700; color: #18181B; margin-bottom: 16px; }
+.followup-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+.followup-row { display: flex; align-items: center; padding: 14px 20px; border-bottom: 1px solid #E4E4E7; gap: 16px; }
+.followup-row:last-child { border-bottom: none; }
+.followup-name { font-weight: 500; color: #18181B; min-width: 140px; }
+.followup-type { font-size: 13px; color: #52525B; min-width: 120px; }
+.followup-date { font-size: 13px; color: #71717A; min-width: 120px; }
+.overdue { color: #DC2626; font-weight: 600; font-size: 12px; }
+.btn-sm { padding: 6px 14px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; margin-left: auto; }
+.btn-sm:hover { background: #1E4A8A; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DD;</span> Applications</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F4BC;</span> Placements</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">&#x1F514;<span class="bell-badge">4</span></div>
+  <div class="topbar-avatar">VA</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <div class="page-header">
+      <h1 class="page-title">Placement Tracking</h1>
+      <button class="btn-primary">+ Record Placement</button>
+    </div>
+
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-label">Placed Total</div>
+        <div class="stat-value">45</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Jobs</div>
+        <div class="stat-value green">38</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Left Job</div>
+        <div class="stat-value red">7</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending Follow-up</div>
+        <div class="stat-value yellow">12</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" class="search-input" placeholder="Search candidates...">
+      <select class="filter-select">
+        <option>All Statuses</option>
+        <option>Active</option>
+        <option>Left Job</option>
+        <option>Unknown</option>
+      </select>
+      <select class="filter-select">
+        <option>All Courses</option>
+        <option>Stitching Basic</option>
+        <option>Computer Fundamentals</option>
+        <option>Beauty Basic</option>
+        <option>Fashion Design</option>
+      </select>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 30px;">#</th>
+            <th>Name</th>
+            <th>Employer</th>
+            <th>Role</th>
+            <th class="center">Salary</th>
+            <th class="center">Placement Date</th>
+            <th class="center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><span class="candidate-name">Priya Sharma</span></td>
+            <td>ABC Textiles Ltd</td>
+            <td>Tailor</td>
+            <td class="center"><span class="salary">&#x20B9;8,000</span></td>
+            <td class="center">Feb 15, 2026</td>
+            <td class="center"><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><span class="candidate-name">Meena Devi</span></td>
+            <td>Lakshmi Garments</td>
+            <td>Machine Operator</td>
+            <td class="center"><span class="salary">&#x20B9;7,500</span></td>
+            <td class="center">Jan 20, 2026</td>
+            <td class="center"><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><span class="candidate-name">Geeta Kumari</span></td>
+            <td>Ravi Data Services</td>
+            <td>Data Entry Operator</td>
+            <td class="center"><span class="salary">&#x20B9;10,000</span></td>
+            <td class="center">Dec 10, 2025</td>
+            <td class="center"><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><span class="candidate-name">Anjali Patel</span></td>
+            <td>Shree Beauty Parlour</td>
+            <td>Beautician</td>
+            <td class="center"><span class="salary">&#x20B9;5,000</span></td>
+            <td class="center">Nov 5, 2025</td>
+            <td class="center"><span class="badge badge-red">Left Job</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><span class="candidate-name">Rekha Yadav</span></td>
+            <td>Bharat Fashions Pvt</td>
+            <td>Assistant Tailor</td>
+            <td class="center"><span class="salary">&#x20B9;12,000</span></td>
+            <td class="center">Jan 8, 2026</td>
+            <td class="center"><span class="badge badge-gray">Unknown</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Upcoming Follow-ups</h2>
+    <div class="followup-card">
+      <div class="followup-row">
+        <span class="followup-name">Priya Sharma</span>
+        <span class="followup-type">1-month check</span>
+        <span class="followup-date">Mar 15, 2026</span>
+        <button class="btn-sm">Record</button>
+      </div>
+      <div class="followup-row">
+        <span class="followup-name">Meena Devi</span>
+        <span class="followup-type">3-month check</span>
+        <span class="followup-date">Apr 20, 2026</span>
+        <button class="btn-sm">Record</button>
+      </div>
+      <div class="followup-row" style="background: #FEF9C3;">
+        <span class="followup-name">Anjali Patel</span>
+        <span class="followup-type">1-month check</span>
+        <span class="followup-date">Dec 5, 2025</span>
+        <span class="overdue">Overdue!</span>
+        <button class="btn-sm">Record</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>OC Dashboard - RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #7C3AED; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; }
+
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; margin-bottom: 4px; }
+.page-subtitle { font-size: 14px; color: #71717A; margin-bottom: 24px; }
+
+/* Stat cards */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; border-left: 4px solid transparent; }
+.stat-card.blue { border-left-color: #2563EB; }
+.stat-card.yellow { border-left-color: #EAB308; }
+.stat-card.green { border-left-color: #16A34A; }
+.stat-card.orange { border-left-color: #EA580C; }
+.stat-label { font-size: 13px; font-weight: 500; color: #71717A; margin-bottom: 8px; }
+.stat-value { font-size: 32px; font-weight: 700; color: #18181B; line-height: 1; }
+.stat-value.blue { color: #2563EB; }
+.stat-value.yellow { color: #CA8A04; }
+.stat-value.green { color: #16A34A; }
+.stat-value.orange { color: #EA580C; }
+
+/* Quick actions */
+.section-title { font-size: 16px; font-weight: 700; color: #18181B; margin-bottom: 14px; }
+.quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+.qa-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 20px; background: #fff; border: 2px solid #2B5EA7; border-radius: 8px; color: #2B5EA7; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.qa-btn:hover { background: #EBF0F9; border-color: #1E4A8A; color: #1E4A8A; }
+.qa-icon { font-size: 22px; }
+
+/* Two-column layout */
+.two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
+
+/* Table card */
+.table-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+.table-card-header { padding: 16px 20px; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: space-between; }
+.table-card-title { font-size: 15px; font-weight: 700; color: #18181B; }
+.view-all { font-size: 13px; font-weight: 600; color: #2B5EA7; text-decoration: none; cursor: pointer; }
+.view-all:hover { color: #1E4A8A; text-decoration: underline; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #F4F4F5; }
+th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E4E4E7; }
+td { padding: 12px 16px; border-bottom: 1px solid #E4E4E7; font-size: 13px; color: #52525B; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #FAFAFA; }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.badge-green { background: #DCFCE7; color: #16A34A; }
+.badge-yellow { background: #FEF3C7; color: #92400E; }
+.badge-blue { background: #DBEAFE; color: #1D4ED8; }
+
+/* Follow-ups */
+.followup-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+.followup-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid #E4E4E7; gap: 12px; }
+.followup-item:last-child { border-bottom: none; }
+.followup-left { flex: 1; }
+.followup-name { font-size: 14px; font-weight: 600; color: #18181B; }
+.followup-meta { font-size: 12px; color: #71717A; margin-top: 2px; }
+.followup-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.followup-due { font-size: 12px; color: #71717A; text-align: right; }
+.overdue-tag { font-size: 11px; font-weight: 700; color: #DC2626; }
+.btn-sm { padding: 6px 14px; background: #2B5EA7; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+.btn-sm:hover { background: #1E4A8A; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DD;</span> Applications</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F3AF;</span> Placements</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">
+    &#x1F514;
+    <span class="bell-badge">5</span>
+  </div>
+  <div class="topbar-avatar">RP</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Welcome back, Rekha. Here's your overview.</p>
+
+    <!-- Stat cards -->
+    <div class="stat-grid">
+      <div class="stat-card blue">
+        <div class="stat-label">New Applications</div>
+        <div class="stat-value blue">12</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="stat-label">Under Review</div>
+        <div class="stat-value yellow">8</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Assigned to Batch</div>
+        <div class="stat-value green">98</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Pending Placement</div>
+        <div class="stat-value orange">15</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions">
+      <button class="qa-btn">
+        <span class="qa-icon">+</span> New Application
+      </button>
+      <button class="qa-btn">
+        <span class="qa-icon">&#x2192;</span> Assign to Batches
+      </button>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="two-col">
+
+      <!-- Recent Applications -->
+      <div class="table-card">
+        <div class="table-card-header">
+          <span class="table-card-title">Recent Applications</span>
+          <a class="view-all" href="#">View All &rarr;</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Course</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:500;color:#18181B;">Lakshmi Devi</td>
+              <td>Stitching Basic</td>
+              <td><span class="badge badge-blue">New</span></td>
+              <td>Mar 10, 2026</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:#18181B;">Anita Rao</td>
+              <td>Computer Fund.</td>
+              <td><span class="badge badge-yellow">Under Review</span></td>
+              <td>Mar 9, 2026</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;color:#18181B;">Fatima Begum</td>
+              <td>Beauty Basic</td>
+              <td><span class="badge badge-green">Assigned</span></td>
+              <td>Mar 8, 2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Upcoming Follow-ups -->
+      <div class="followup-card">
+        <div class="table-card-header">
+          <span class="table-card-title">Upcoming Follow-ups</span>
+          <a class="view-all" href="#">View All &rarr;</a>
+        </div>
+
+        <div class="followup-item">
+          <div class="followup-left">
+            <div class="followup-name">Meena Kumari</div>
+            <div class="followup-meta">1-month follow-up</div>
+          </div>
+          <div class="followup-right">
+            <div class="followup-due">
+              <div style="font-weight:500;color:#18181B;">Mar 12, 2026</div>
+              <div>Tomorrow</div>
+            </div>
+            <button class="btn-sm">Record</button>
+          </div>
+        </div>
+
+        <div class="followup-item">
+          <div class="followup-left">
+            <div class="followup-name">Sunita Bai</div>
+            <div class="followup-meta">3-month follow-up</div>
+          </div>
+          <div class="followup-right">
+            <div class="followup-due">
+              <div style="font-weight:500;color:#18181B;">Mar 8, 2026</div>
+              <div class="overdue-tag">Overdue!</div>
+            </div>
+            <button class="btn-sm">Record</button>
+          </div>
+        </div>
+
+        <div class="followup-item">
+          <div class="followup-left">
+            <div class="followup-name">Kavita Joshi</div>
+            <div class="followup-meta">1-month follow-up</div>
+          </div>
+          <div class="followup-right">
+            <div class="followup-due">
+              <div style="font-weight:500;color:#18181B;">Mar 18, 2026</div>
+              <div>In 7 days</div>
+            </div>
+            <button class="btn-sm">Record</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

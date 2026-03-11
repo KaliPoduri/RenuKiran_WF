@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Notifications — RWF LMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; color: #52525B; font-size: 14px; line-height: 1.5; }
+
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: #fff; border-right: 1px solid #E4E4E7; display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 24px 20px; border-bottom: 1px solid #E4E4E7; }
+.sidebar-brand .brand-name { font-size: 22px; font-weight: 700; color: #7CB518; letter-spacing: 0.5px; }
+.sidebar-brand .brand-sub { font-size: 10px; font-weight: 600; color: #2B5EA7; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 14px; font-weight: 500; color: #52525B; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: #F4F4F5; color: #18181B; }
+.nav-item.active { border-left-color: #2B5EA7; background: #EBF0F9; color: #2B5EA7; font-weight: 600; }
+.nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid #E4E4E7; font-size: 12px; color: #71717A; }
+
+/* Top bar */
+.topbar { position: fixed; left: 260px; top: 0; right: 0; height: 56px; background: #fff; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 16px; z-index: 10; }
+.topbar-bell { position: relative; cursor: pointer; font-size: 20px; color: #52525B; }
+.topbar-bell:hover { color: #18181B; }
+.bell-badge { position: absolute; top: -4px; right: -6px; width: 18px; height: 18px; background: #DC2626; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.topbar-avatar { width: 36px; height: 36px; background: #2B5EA7; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* Main */
+.main { margin-left: 260px; padding-top: 56px; }
+.content { padding: 24px 32px; max-width: 800px; }
+
+/* Page header */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.page-title { font-size: 24px; font-weight: 700; color: #18181B; }
+.btn-ghost { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: transparent; color: #2B5EA7; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+.btn-ghost:hover { background: #EBF0F9; }
+
+/* Time groups */
+.time-group { margin-bottom: 28px; }
+.time-label { font-size: 12px; font-weight: 600; color: #71717A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+/* Notification cards */
+.notif-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px 20px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 14px; border-left: 3px solid transparent; cursor: pointer; transition: all 0.15s; }
+.notif-card:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+.notif-card.unread { background: #F0F5FC; border-left-color: #2B5EA7; }
+.notif-card.read { border-left-color: transparent; }
+
+/* Icon circle */
+.notif-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.notif-icon.warning { background: #FEF9C3; color: #CA8A04; }
+.notif-icon.blue { background: #DBEAFE; color: #2563EB; }
+.notif-icon.green { background: #DCFCE7; color: #16A34A; }
+.notif-icon.purple { background: #F3E8FF; color: #7C3AED; }
+.notif-icon.red { background: #FEE2E2; color: #DC2626; }
+.notif-icon.gray { background: #F4F4F5; color: #71717A; }
+
+/* Content */
+.notif-body { flex: 1; min-width: 0; }
+.notif-title { font-size: 14px; font-weight: 600; color: #18181B; margin-bottom: 2px; }
+.notif-sub { font-size: 13px; color: #71717A; }
+.notif-time { font-size: 12px; color: #A1A1AA; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+
+/* Unread dot */
+.unread-dot { width: 8px; height: 8px; border-radius: 50%; background: #2B5EA7; flex-shrink: 0; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Renukiran</div>
+    <div class="brand-sub">WELFARE FOUNDATION</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4CA;</span> Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4DA;</span> Courses</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F465;</span> Batches</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F464;</span> Users</a>
+    <a class="nav-item" href="#"><span class="nav-icon">&#x1F4C8;</span> Reports</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">&#x1F514;</span> Notifications</a>
+  </nav>
+  <div class="sidebar-footer">RWF LMS v1.0</div>
+</aside>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-bell">&#x1F514;<span class="bell-badge">2</span></div>
+  <div class="topbar-avatar">VA</div>
+</header>
+
+<!-- Main content -->
+<div class="main">
+  <div class="content">
+
+    <div class="page-header">
+      <h1 class="page-title">Notifications</h1>
+      <button class="btn-ghost">Mark All Read</button>
+    </div>
+
+    <!-- Today -->
+    <div class="time-group">
+      <div class="time-label">Today</div>
+
+      <div class="notif-card unread">
+        <div class="notif-icon warning">&#x26A0;</div>
+        <div class="notif-body">
+          <div class="notif-title">Low attendance alert: Kavita R. (68%)</div>
+          <div class="notif-sub">Stitching B1</div>
+        </div>
+        <div class="notif-time">2 hours ago</div>
+        <div class="unread-dot"></div>
+      </div>
+
+      <div class="notif-card unread">
+        <div class="notif-icon blue">&#x1F4CB;</div>
+        <div class="notif-body">
+          <div class="notif-title">Placement follow-up due: Priya S.</div>
+          <div class="notif-sub">1-month check &mdash; Due today</div>
+        </div>
+        <div class="notif-time">5 hours ago</div>
+        <div class="unread-dot"></div>
+      </div>
+    </div>
+
+    <!-- Yesterday -->
+    <div class="time-group">
+      <div class="time-label">Yesterday</div>
+
+      <div class="notif-card read">
+        <div class="notif-icon green">&#x2713;</div>
+        <div class="notif-body">
+          <div class="notif-title">Batch B3 created: Beauty Basic</div>
+          <div class="notif-sub">By Vinay A.</div>
+        </div>
+        <div class="notif-time">Yesterday at 3:45 PM</div>
+      </div>
+
+      <div class="notif-card read">
+        <div class="notif-icon purple">&#x1F4CA;</div>
+        <div class="notif-body">
+          <div class="notif-title">Assessment results published: Stitching B1</div>
+          <div class="notif-sub">Pass rate: 83%</div>
+        </div>
+        <div class="notif-time">Yesterday at 11:30 AM</div>
+      </div>
+    </div>
+
+    <!-- Older -->
+    <div class="time-group">
+      <div class="time-label">Older</div>
+
+      <div class="notif-card read">
+        <div class="notif-icon red">&#x2717;</div>
+        <div class="notif-body">
+          <div class="notif-title">Enrollment rejected: Sita D.</div>
+          <div class="notif-sub">Computer Fundamentals &mdash; Batch full</div>
+        </div>
+        <div class="notif-time">Mar 8, 2026</div>
+      </div>
+
+      <div class="notif-card read">
+        <div class="notif-icon gray">&#x1F464;</div>
+        <div class="notif-body">
+          <div class="notif-title">New user registered: Meena D.</div>
+          <div class="notif-sub">Added by Admin</div>
+        </div>
+        <div class="notif-time">Mar 7, 2026</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
